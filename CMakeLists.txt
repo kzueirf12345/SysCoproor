@@ -4,16 +4,16 @@ project(SysCoproor)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # to generate compile_commands.json
 
-add_executable(${CMAKE_PROJECT_NAME})
+add_subdirectory(source/Vector)
 
-# add_subdirectory(source/third_party)
+find_package(SFML 2.5.1 COMPONENTS graphics REQUIRED)
 
-target_sources(${CMAKE_PROJECT_NAME}
-    PRIVATE
-        
+add_executable(${CMAKE_PROJECT_NAME}
     source/main.cpp
 )
 
-# target_link_libraries(gas
-#     PRIVATE
-# )
+target_link_libraries(${CMAKE_PROJECT_NAME} 
+    PRIVATE
+        sfml-graphics
+        Vector
+)
