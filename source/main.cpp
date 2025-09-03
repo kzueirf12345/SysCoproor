@@ -2,11 +2,18 @@
 
 #include <SFML/Graphics.hpp>
 
+#include "Plot/include/Plot.hpp"
+#include "Common/include/ErrorHandle.hpp"
+
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
+    SysCopro::Plot plot(SysCopro::Vector(100, 100), SysCopro::Vector(500, 500));
+
+    std::cout << SysCopro::Vector(500, 500).GetY() << std::endl;
+
+    sf::RenderWindow window(sf::VideoMode(1000, 1000), "SFML works!");
+    // sf::CircleShape shape(100.f);
+    // shape.setFillColor(sf::Color::Green);
 
     while (window.isOpen())
     {
@@ -18,7 +25,9 @@ int main()
         }
 
         window.clear();
-        window.draw(shape);
+
+        ERROR_HANDLE(plot.Print(window));
+
         window.display();
     }
 

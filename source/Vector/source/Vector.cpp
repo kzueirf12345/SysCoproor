@@ -1,7 +1,7 @@
 
 #include <cstdint>
 
-#include "Vector.hpp"
+#include "Vector/include/Vector.hpp"
 
 std::uint64_t SysCopro::Vector::GetX() {
     return this->x;

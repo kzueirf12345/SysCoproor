@@ -1,3 +1,6 @@
+#ifndef SYS_COPROOR_SOURCE_VECTOR_INCLUDE_VECTOR_HPP
+#define SYS_COPROOR_SOURCE_VECTOR_INCLUDE_VECTOR_HPP
+
 #include <cstdint>
 
 namespace SysCopro
@@ -17,4 +20,5 @@ public:
     ~Vector() = default;
 };
 }
+#endif /*SYS_COPROOR_SOURCE_VECTOR_INCLUDE_VECTOR_HPP*/
 
