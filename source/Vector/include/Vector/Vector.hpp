@@ -14,8 +14,8 @@ public:
         : x{x}, y{y} 
     {};
 
-    uint64_t GetX();
-    uint64_t GetY();
+    [[nodiscard]] uint64_t GetX() const;
+    [[nodiscard]] uint64_t GetY() const;
 
     ~Vector() = default;
 };

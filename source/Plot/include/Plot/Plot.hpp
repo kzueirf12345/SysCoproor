@@ -15,17 +15,20 @@ namespace SysCopro
     
 class Plot {
 private:
-    sf::Vector2f LeftCorner;
-    sf::Vector2f RightCorner;
-    sf::Color    BGColor;
-    uint64_t     Scale;
+    sf::Vector2f    LeftCorner;
+    sf::Vector2f    RightCorner;
+    sf::Color       BGColor;
+    sf::Color       FGColor;
+    uint64_t        Scale;
 
 public:
-    Plot(sf::Vector2f LeftCorner, sf::Vector2f RightCorner, sf::Color BGColor, uint64_t Scale)
-        : LeftCorner{LeftCorner}, RightCorner{RightCorner}, BGColor{BGColor}, Scale{Scale}
+    Plot(sf::Vector2f LeftCorner, sf::Vector2f RightCorner, sf::Color BGColor, sf::Color FGColor, 
+         uint64_t Scale)
+       : LeftCorner{LeftCorner}, RightCorner{RightCorner}, BGColor{BGColor}, FGColor{FGColor}, 
+         Scale{Scale}
     { }
 
-    Common::Error Print(sf::RenderWindow& Renderer);
+    Common::Error Print(sf::RenderWindow& Renderer) const;
 
     ~Plot() = default;
 };

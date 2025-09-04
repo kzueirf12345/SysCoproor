@@ -8,7 +8,7 @@
 #include "Common/ErrorHandle.hpp"
 #include "Plot/Plot.hpp"
 
-Common::Error SysCopro::Plot::Print(sf::RenderWindow& Window) {
+Common::Error SysCopro::Plot::Print(sf::RenderWindow& Window) const {
     sf::RectangleShape BGRect(
         sf::Vector2f(
             this->RightCorner.x - this->LeftCorner.x,
@@ -25,8 +25,8 @@ Common::Error SysCopro::Plot::Print(sf::RenderWindow& Window) {
     sf::VertexArray XAxis(sf::PrimitiveType::Lines, 2);
     sf::VertexArray YAxis(sf::PrimitiveType::Lines, 2);
 
-    XAxis[0].color = XAxis[1].color = sf::Color(255, 255, 255, 200);
-    YAxis[0].color = YAxis[1].color = sf::Color(255, 255, 255, 200);
+    XAxis[0].color = XAxis[1].color = this->FGColor;
+    YAxis[0].color = YAxis[1].color = this->FGColor;
 
     XAxis[0].position = sf::Vector2f(
         this->LeftCorner.x, 
