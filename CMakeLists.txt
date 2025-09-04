@@ -2,11 +2,12 @@ cmake_minimum_required(VERSION 3.21)
 
 project(SysCoproor LANGUAGES CXX)
 
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # to generate compile_commands.json
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
-# set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES FOLDER "bin")
 
 add_subdirectory(source/Common)
 add_subdirectory(source/Vector)

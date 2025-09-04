@@ -1,23 +1,25 @@
-#ifndef SYS_COPROOR_SOURCE_PLOT_INCLUDE_PLOT_HPP
-#define SYS_COPROOR_SOURCE_PLOT_INCLUDE_PLOT_HPP
+#ifndef SYS_COPROOR_SOURCE_PLOT_INCLUDE_PLOT_PLOT_HPP
+#define SYS_COPROOR_SOURCE_PLOT_INCLUDE_PLOT_PLOT_HPP
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Graphics/Color.hpp>
+#include <SFML/System/Vector2.hpp>
 
 #include "Common/ErrorHandle.hpp"
-#include "Vector/Vector.hpp"
+// #include "Vector/Vector.hpp"
 
 namespace SysCopro
 {
     
-class Plot
-{
+class Plot {
 private:
-    SysCopro::Vector LeftCorner;
-    SysCopro::Vector RightCorner;
+    sf::Vector2f LeftCorner;
+    sf::Vector2f RightCorner;
+    sf::Color    BGColor;
 
 public:
-    Plot(SysCopro::Vector LeftCorner, SysCopro::Vector RightCorner)
-        : LeftCorner{LeftCorner}, RightCorner{RightCorner}
+    Plot(sf::Vector2f LeftCorner, sf::Vector2f RightCorner, sf::Color BGColor)
+        : LeftCorner{LeftCorner}, RightCorner{RightCorner}, BGColor{BGColor}
     { }
 
     Common::Error Print(sf::RenderWindow& Renderer);
@@ -27,5 +29,5 @@ public:
 
 }
 
-#endif /*SYS_COPROOR_SOURCE_PLOT_INCLUDE_PLOT_HPP*/
+#endif /*SYS_COPROOR_SOURCE_PLOT_INCLUDE_PLOT_PLOT_HPP*/
 

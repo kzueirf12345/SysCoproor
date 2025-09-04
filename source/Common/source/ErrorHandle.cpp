@@ -1,8 +1,6 @@
 #include <string>
-#include <iostream>
 
 #include "Common/ErrorHandle.hpp"
-#include "Common/Concole.hpp"
 
 #define CASE_ENUM_TO_STRING_(Error) case Error: return #Error
 std::string Common::ErrorToString(const enum Common::Error Error) {

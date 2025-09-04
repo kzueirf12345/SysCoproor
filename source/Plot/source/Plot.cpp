@@ -1,21 +1,21 @@
-#include <iostream>
-
 #include <SFML/Graphics.hpp>
 
 #include "Common/ErrorHandle.hpp"
 #include "Plot/Plot.hpp"
 
 Common::Error SysCopro::Plot::Print(sf::RenderWindow& Renderer) {
-    sf::RectangleShape Rect(
+    sf::RectangleShape BGRect(
         sf::Vector2f(
-            this->RightCorner.GetX() - this->LeftCorner.GetX(),
-            this->RightCorner.GetY() - this->LeftCorner.GetY()
+            this->RightCorner.x - this->LeftCorner.x,
+            this->RightCorner.y - this->LeftCorner.y
         )
     );
 
-    Rect.setPosition(sf::Vector2f(this->LeftCorner.GetX(), this->LeftCorner.GetY()));
+    BGRect.setPosition(this->LeftCorner);
+    BGRect.setFillColor(this->BGColor);
+    BGRect.setOutlineColor(sf::Color::Black);
 
-    Renderer.draw(Rect);
+    Renderer.draw(BGRect);
 
     return Common::Error::SUCCESS;
 }
