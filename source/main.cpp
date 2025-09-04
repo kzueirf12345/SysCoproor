@@ -6,7 +6,7 @@
 
 int main()
 {
-    SysCopro::Plot plot(sf::Vector2f(100, 100), sf::Vector2f(500, 500), sf::Color::Magenta);
+    SysCopro::Plot plot(sf::Vector2f(100, 100), sf::Vector2f(500, 500), sf::Color::Magenta, 5);
 
     sf::RenderWindow window(sf::VideoMode(1000, 1000), "System Coproordinations (SysCopro)");
 

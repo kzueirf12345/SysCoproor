@@ -7,15 +7,15 @@ namespace SysCopro
 {
 class Vector {
 private:
-    std::uint64_t x;
-    std::uint64_t y;
+    uint64_t x;
+    uint64_t y;
 public:
-    Vector(std::uint64_t x, std::uint64_t y) 
+    Vector(uint64_t x, uint64_t y) 
         : x{x}, y{y} 
     {};
 
-    std::uint64_t GetX();
-    std::uint64_t GetY();
+    uint64_t GetX();
+    uint64_t GetY();
 
     ~Vector() = default;
 };

@@ -3,10 +3,10 @@
 
 #include "Vector/Vector.hpp"
 
-std::uint64_t SysCopro::Vector::GetX() {
+uint64_t SysCopro::Vector::GetX() {
     return this->x;
 }
 
-std::uint64_t SysCopro::Vector::GetY() {
+uint64_t SysCopro::Vector::GetY() {
     return this->y;
 }
