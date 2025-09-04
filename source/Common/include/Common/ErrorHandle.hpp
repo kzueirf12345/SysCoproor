@@ -5,7 +5,7 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Common/include/Concole.hpp"
+#include "Concole.hpp"
 
 namespace Common
 {

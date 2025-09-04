@@ -1,13 +1,16 @@
-add_library(Vector STATIC)
-
-target_sources(Vector
-    PRIVATE
-        source/Vector.cpp
+add_library(Vector STATIC
+    source/Vector.cpp
 )
+
+set_target_properties(Vector PROPERTIES FOLDER "source")
 
 target_include_directories(Vector
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
-    PRIVATE
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> # Для сборки проекта
+        $<INSTALL_INTERFACE:include>                           # Для будущей установки
+)
+
+target_link_libraries(Vector
+    PRIVATE 
         Common
 )

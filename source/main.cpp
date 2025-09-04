@@ -2,18 +2,14 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Plot/include/Plot.hpp"
-#include "Common/include/ErrorHandle.hpp"
+#include "Plot/Plot.hpp"
+#include "Common/ErrorHandle.hpp"
 
 int main()
 {
     SysCopro::Plot plot(SysCopro::Vector(100, 100), SysCopro::Vector(500, 500));
 
-    std::cout << SysCopro::Vector(500, 500).GetY() << std::endl;
-
-    sf::RenderWindow window(sf::VideoMode(1000, 1000), "SFML works!");
-    // sf::CircleShape shape(100.f);
-    // shape.setFillColor(sf::Color::Green);
+    sf::RenderWindow window(sf::VideoMode(1000, 1000), "System Coproordinations (SysCopro)");
 
     while (window.isOpen())
     {

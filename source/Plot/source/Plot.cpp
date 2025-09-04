@@ -2,8 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Common/include/ErrorHandle.hpp"
-#include "Plot/include/Plot.hpp"
+#include "Common/ErrorHandle.hpp"
+#include "Plot/Plot.hpp"
 
 Common::Error SysCopro::Plot::Print(sf::RenderWindow& Renderer) {
     sf::RectangleShape Rect(

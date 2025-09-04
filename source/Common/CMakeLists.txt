@@ -1,11 +1,11 @@
-add_library(Common STATIC)
-
-target_sources(Common
-    PRIVATE
-        source/ErrorHandle.cpp
+add_library(Common STATIC
+    source/ErrorHandle.cpp
 )
+
+set_target_properties(Common PROPERTIES FOLDER "source")
 
 target_include_directories(Common
     PUBLIC
-        ${CMAKE_CURRENT_SOURCE_DIR}/include
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include> # Для сборки проекта
+        $<INSTALL_INTERFACE:include>                           # Для будущей установки
 )

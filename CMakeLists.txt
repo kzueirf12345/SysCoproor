@@ -1,10 +1,12 @@
 cmake_minimum_required(VERSION 3.21)
 
-project(SysCoproor)
+project(SysCoproor LANGUAGES CXX)
 
-set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # to generate compile_commands.json
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-include_directories(source)
+set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+# set_target_properties(${CMAKE_PROJECT_NAME} PROPERTIES FOLDER "bin")
 
 add_subdirectory(source/Common)
 add_subdirectory(source/Vector)
@@ -14,11 +16,6 @@ find_package(SFML 2.5.1 COMPONENTS graphics REQUIRED)
 
 add_executable(${CMAKE_PROJECT_NAME}
     source/main.cpp
-)
-
-target_include_directories(${CMAKE_PROJECT_NAME}
-    PRIVATE
-        ${CMAKE_SOURCE_DIR}/source
 )
 
 target_link_libraries(${CMAKE_PROJECT_NAME} 

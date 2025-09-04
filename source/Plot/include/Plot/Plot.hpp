@@ -3,8 +3,8 @@
 
 #include <SFML/Graphics.hpp>
 
-#include "Common/include/ErrorHandle.hpp"
-#include "Vector/include/Vector.hpp"
+#include "Common/ErrorHandle.hpp"
+#include "Vector/Vector.hpp"
 
 namespace SysCopro
 {
