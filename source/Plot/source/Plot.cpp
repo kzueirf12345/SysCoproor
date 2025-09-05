@@ -21,6 +21,9 @@ Common::Error SysCopro::Plot::Print(sf::RenderWindow& Window) const {
     Window.draw(this->CreateGrid(true ));
     Window.draw(this->CreateGrid(false));
 
+    constexpr size_t DotsCnt = 2048;
+    Window.draw(this->CreateFuncPlot(DotsCnt));
+
     return Common::Error::SUCCESS;
 }
 
@@ -40,13 +43,13 @@ sf::RectangleShape SysCopro::Plot::CreateBG() const
     return BGRect;
 }
 
-sf::VertexArray SysCopro::Plot::CreateAxis(const bool isX) const
+sf::VertexArray SysCopro::Plot::CreateAxis(const bool IsX) const
 {
     sf::VertexArray Axis(sf::PrimitiveType::Lines, 2);
 
     Axis[0].color = Axis[1].color = this->FGColor;
 
-    if (isX) {
+    if (IsX) {
         Axis[0].position.x = this->LeftCorner.x;
         Axis[0].position.y = this->OriginOffset.y * ScaleY + this->LeftCorner.y;
 
@@ -63,7 +66,7 @@ sf::VertexArray SysCopro::Plot::CreateAxis(const bool isX) const
     return Axis;
 }
 
-sf::VertexArray SysCopro::Plot::CreateGrid(const bool isX) const
+sf::VertexArray SysCopro::Plot::CreateGrid(const bool IsX) const
 {
     constexpr sf::Uint8 GridLineOpacity = 25;
     const sf::Color GridLineColor(
@@ -73,7 +76,7 @@ sf::VertexArray SysCopro::Plot::CreateGrid(const bool isX) const
         GridLineOpacity
     );
 
-    if (isX) {
+    if (IsX) {
         const size_t GridLinesCnt = (this->RightCorner.y - this->LeftCorner.y) / this->ScaleY + 1;
 
         sf::VertexArray Grid(sf::PrimitiveType::Lines, 2 * GridLinesCnt);
@@ -106,5 +109,36 @@ sf::VertexArray SysCopro::Plot::CreateGrid(const bool isX) const
 
         return Grid;
     }
+}
 
+sf::VertexArray SysCopro::Plot::CreateFuncPlot(const size_t DotsCnt) const
+{
+    sf::VertexArray Line(sf::PrimitiveType::LinesStrip, DotsCnt);
+
+    const float Step = (Pix2Seg(RightCorner).x - Pix2Seg(LeftCorner).x) / DotsCnt;
+    const float MinSegX = Pix2Seg(LeftCorner).x;
+    const float MaxSegX = Pix2Seg(RightCorner).x;
+
+    for (size_t DotNum = 0; DotNum < DotsCnt; ++DotNum) {
+        Line[DotNum].color = this->FGColor;
+
+        const float CurSegX = MinSegX + DotNum * Step;
+        Line[DotNum].position = Seg2Pix(sf::Vector2f(CurSegX, this->Func(CurSegX)));
+    }
+
+    // Line[DotsCnt - 1].position = Seg2Pix(sf::Vector2f(MaxSegX, this->Func(MaxSegX)));
+
+    return Line;
+}
+
+sf::Vector2f SysCopro::Plot::Seg2Pix(const sf::Vector2f SegDot) const
+{
+    return sf::Vector2f(this->LeftCorner.x + this->ScaleX * (this->OriginOffset.x + SegDot.x),
+                        this->LeftCorner.y + this->ScaleY * (this->OriginOffset.y + SegDot.y));
+}
+
+sf::Vector2f SysCopro::Plot::Pix2Seg(const sf::Vector2f PixDot) const
+{
+    return sf::Vector2f((PixDot.x - this->LeftCorner.x) / this->ScaleX - this->OriginOffset.x,
+                        (PixDot.y - this->LeftCorner.y) / this->ScaleY - this->OriginOffset.y);
 }

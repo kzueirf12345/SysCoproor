@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -13,7 +15,7 @@ int main()
     constexpr unsigned int WINDOW_HEIGHT        = 1000;
 
     constexpr unsigned int BIG_PLOT_SIZE        = 500;
-    constexpr unsigned int SMALL_PLOT_SIZE     = 250;
+    constexpr unsigned int SMALL_PLOT_SIZE      = 250;
 
     constexpr unsigned int BIG_PLOT_MARGIN      = (WINDOW_HEIGHT - BIG_PLOT_SIZE) / 2;
     constexpr unsigned int SMALL_PLOT_MARGIN    = (WINDOW_HEIGHT - SMALL_PLOT_SIZE) / 2;
@@ -39,7 +41,8 @@ int main()
         PlotFGColor,
         ScaleX,
         ScaleY,
-        OriginOffset
+        OriginOffset,
+        std::sin
     );
 
     SysCopro::Plot SmallPlot(
@@ -49,7 +52,8 @@ int main()
         PlotFGColor,
         ScaleX,
         ScaleY,
-        OriginOffset
+        OriginOffset,
+        std::sin
     );
 
     while (Window.isOpen())

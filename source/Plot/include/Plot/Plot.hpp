@@ -20,16 +20,22 @@ private:
     unsigned int    ScaleX;
     unsigned int    ScaleY;
     sf::Vector2f    OriginOffset;
+    float (* const Func)(const float X);
 
-    sf::RectangleShape CreateBG  ()               const ;
-    sf::VertexArray    CreateAxis(const bool isX) const ;
-    sf::VertexArray    CreateGrid(const bool isX) const ;
+    sf::RectangleShape CreateBG      ()                          const ;
+    sf::VertexArray    CreateAxis    (const bool IsX)            const ;
+    sf::VertexArray    CreateGrid    (const bool IsX)            const ;
+    sf::VertexArray    CreateFuncPlot(const size_t DotsCnt)      const ;
+
+    sf::Vector2f       Seg2Pix       (const sf::Vector2f SegDot) const;
+    sf::Vector2f       Pix2Seg       (const sf::Vector2f PixDot) const;
 
 public:
     Plot(sf::Vector2f LeftCorner, sf::Vector2f RightCorner, sf::Color BGColor, sf::Color FGColor, 
-         unsigned int ScaleX, unsigned int ScaleY, sf::Vector2f OriginOffset)
+         unsigned int ScaleX, unsigned int ScaleY, sf::Vector2f OriginOffset, 
+         float (* const Func)(const float X))
        : LeftCorner{LeftCorner}, RightCorner{RightCorner}, BGColor{BGColor}, FGColor{FGColor}, 
-         OriginOffset{OriginOffset}
+         OriginOffset{OriginOffset}, Func(Func)
     { 
         this->ScaleX = (RightCorner.x - LeftCorner.x) / ScaleX;
         this->ScaleY = (RightCorner.y - LeftCorner.y) / ScaleY;
