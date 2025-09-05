@@ -129,7 +129,7 @@ std::vector<sf::VertexArray> SysCopro::Plot::CreateFuncPlot(const size_t DotsCnt
     for (size_t DotNum = 0; DotNum < DotsCnt; ++DotNum) {
         const float CurSegX = MinSegX + DotNum * Step;
         const float CurSegY = this->Func(CurSegX);
-        const sf::Vector2f CurPixDot = Seg2Pix(sf::Vector2f(CurSegX, this->Func(CurSegX)));
+        const sf::Vector2f CurPixDot = Seg2Pix(sf::Vector2f(CurSegX, -this->Func(CurSegX)));
 
         if (this->LeftCorner.y <= CurPixDot.y && CurPixDot.y <= this->RightCorner.y) {
             if (IsNewLine) {

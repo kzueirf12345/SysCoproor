@@ -44,7 +44,7 @@ int main()
         ScaleX,
         ScaleY,
         OriginOffset,
-        std::tan
+        std::sin
     );
 
     SysCopro::Plot SmallPlot(
@@ -56,7 +56,7 @@ int main()
         ScaleX,
         ScaleY,
         OriginOffset,
-        std::tan
+        std::sin
     );
 
     while (Window.isOpen())
