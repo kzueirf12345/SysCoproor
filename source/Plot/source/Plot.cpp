@@ -1,5 +1,4 @@
 #include <cmath>
-#include <vector>
 
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/Vertex.hpp>
@@ -13,7 +12,7 @@
 #include "Common/ErrorHandle.hpp"
 #include "Plot/Plot.hpp"
 
-Common::Error SysCopro::Plot::Print(sf::RenderWindow& Window) const {
+Common::Error SysCopro::Plot::PrintSysCopro(sf::RenderWindow& Window) const {
 
     Window.draw(this->CreateBG());
 
@@ -22,12 +21,6 @@ Common::Error SysCopro::Plot::Print(sf::RenderWindow& Window) const {
 
     Window.draw(this->CreateGrid(true ));
     Window.draw(this->CreateGrid(false));
-
-    constexpr size_t DotsCnt = 2048;
-    
-    for (auto Line : this->CreateFuncPlot(DotsCnt)) {
-        Window.draw(Line);
-    }
 
     return Common::Error::SUCCESS;
 }
@@ -116,33 +109,31 @@ sf::VertexArray SysCopro::Plot::CreateGrid(const bool IsX) const
     }
 }
 
-std::vector<sf::VertexArray> SysCopro::Plot::CreateFuncPlot(const size_t DotsCnt) const
-{
-    std::vector<sf::VertexArray> Lines;
+Common::Error SysCopro::Plot::PrintPlot(sf::RenderWindow& Window, 
+                                        float (* const Func)(const float X)) const {
+    constexpr size_t DotsCnt = 2048;
+
+    sf::VertexArray Line(sf::PrimitiveType::LinesStrip);
 
     const float Step = (Pix2Seg(RightCorner).x - Pix2Seg(LeftCorner).x) / DotsCnt;
     const float MinSegX = Pix2Seg(LeftCorner).x;
     const float MaxSegX = Pix2Seg(RightCorner).x;
 
-    bool IsNewLine = true;
-
     for (size_t DotNum = 0; DotNum < DotsCnt; ++DotNum) {
         const float CurSegX = MinSegX + DotNum * Step;
-        const float CurSegY = this->Func(CurSegX);
-        const sf::Vector2f CurPixDot = Seg2Pix(sf::Vector2f(CurSegX, -this->Func(CurSegX)));
+        const float CurSegY = Func(CurSegX);
+        const sf::Vector2f CurPixDot = Seg2Pix(sf::Vector2f(CurSegX, -CurSegY));
 
         if (this->LeftCorner.y <= CurPixDot.y && CurPixDot.y <= this->RightCorner.y) {
-            if (IsNewLine) {
-                Lines.push_back(sf::VertexArray(sf::PrimitiveType::LinesStrip));
-            }
-            Lines.back().append(sf::Vertex(CurPixDot, this->PlotColor));
-            IsNewLine = false;
+            Line.append(sf::Vertex(CurPixDot, this->PlotColor));
         } else {
-            IsNewLine = true;
+            Window.draw(Line);
+            Line.clear();
         }
     }
+    Window.draw(Line);
 
-    return Lines;
+    return Common::Error::SUCCESS;
 }
 
 sf::Vector2f SysCopro::Plot::Seg2Pix(const sf::Vector2f SegDot) const

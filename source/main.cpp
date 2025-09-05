@@ -43,8 +43,7 @@ int main()
         PlotPlotColor,
         ScaleX,
         ScaleY,
-        OriginOffset,
-        std::sin
+        OriginOffset
     );
 
     SysCopro::Plot SmallPlot(
@@ -55,8 +54,7 @@ int main()
         PlotPlotColor,
         ScaleX,
         ScaleY,
-        OriginOffset,
-        std::sin
+        OriginOffset
     );
 
     while (Window.isOpen())
@@ -70,8 +68,12 @@ int main()
 
         Window.clear();
 
-        ERROR_HANDLE(BigPlot.Print(Window));
-        ERROR_HANDLE(SmallPlot.Print(Window));
+        ERROR_HANDLE(BigPlot.   PrintSysCopro   (Window));
+        ERROR_HANDLE(SmallPlot. PrintSysCopro   (Window));
+        ERROR_HANDLE(BigPlot.   PrintPlot       (Window, std::tan));
+        ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::tan));
+        ERROR_HANDLE(BigPlot.   PrintPlot       (Window, std::sin));
+        ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::sin));
 
         Window.display();
     }
