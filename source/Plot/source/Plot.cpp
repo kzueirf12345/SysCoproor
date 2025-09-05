@@ -1,3 +1,6 @@
+#include <cmath>
+
+#include <SFML/Config.hpp>
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/PrimitiveType.hpp>
@@ -9,6 +12,20 @@
 #include "Plot/Plot.hpp"
 
 Common::Error SysCopro::Plot::Print(sf::RenderWindow& Window) const {
+
+    Window.draw(this->CreateBG());
+
+    Window.draw(this->CreateAxis(true ));
+    Window.draw(this->CreateAxis(false));
+
+    Window.draw(this->CreateGrid(true ));
+    Window.draw(this->CreateGrid(false));
+
+    return Common::Error::SUCCESS;
+}
+
+sf::RectangleShape SysCopro::Plot::CreateBG() const
+{
     sf::RectangleShape BGRect(
         sf::Vector2f(
             this->RightCorner.x - this->LeftCorner.x,
@@ -20,36 +37,74 @@ Common::Error SysCopro::Plot::Print(sf::RenderWindow& Window) const {
     BGRect.setFillColor(this->BGColor);
     BGRect.setOutlineColor(sf::Color::Black);
 
-    Window.draw(BGRect);
+    return BGRect;
+}
 
-    sf::VertexArray XAxis(sf::PrimitiveType::Lines, 2);
-    sf::VertexArray YAxis(sf::PrimitiveType::Lines, 2);
+sf::VertexArray SysCopro::Plot::CreateAxis(const bool isX) const
+{
+    sf::VertexArray Axis(sf::PrimitiveType::Lines, 2);
 
-    XAxis[0].color = XAxis[1].color = this->FGColor;
-    YAxis[0].color = YAxis[1].color = this->FGColor;
+    Axis[0].color = Axis[1].color = this->FGColor;
 
-    XAxis[0].position = sf::Vector2f(
-        this->LeftCorner.x, 
-        this->LeftCorner.y + (this->RightCorner.y - this->LeftCorner.y) / 2
+    if (isX) {
+        Axis[0].position.x = this->LeftCorner.x;
+        Axis[0].position.y = this->OriginOffset.y * ScaleY + this->LeftCorner.y;
+
+        Axis[1].position.x = this->RightCorner.x;
+        Axis[1].position.y = this->OriginOffset.y * ScaleY + this->LeftCorner.y;
+    } else {
+        Axis[0].position.x = this->OriginOffset.x * ScaleX + this->LeftCorner.x; 
+        Axis[0].position.y = this->LeftCorner.y;
+
+        Axis[1].position.x = this->OriginOffset.x * ScaleX + this->LeftCorner.x; 
+        Axis[1].position.y = this->RightCorner.y;
+    }
+
+    return Axis;
+}
+
+sf::VertexArray SysCopro::Plot::CreateGrid(const bool isX) const
+{
+    constexpr sf::Uint8 GridLineOpacity = 25;
+    const sf::Color GridLineColor(
+        this->FGColor.r, 
+        this->FGColor.g, 
+        this->FGColor.b, 
+        GridLineOpacity
     );
 
-    XAxis[1].position = sf::Vector2f(
-        this->RightCorner.x, 
-        this->LeftCorner.y + (this->RightCorner.y - this->LeftCorner.y) / 2
-    );
+    if (isX) {
+        const size_t GridLinesCnt = (this->RightCorner.y - this->LeftCorner.y) / this->ScaleY + 1;
 
-    YAxis[0].position = sf::Vector2f(
-        this->LeftCorner.x + (this->RightCorner.x - this->LeftCorner.x) / 2, 
-        this->LeftCorner.y
-    );
+        sf::VertexArray Grid(sf::PrimitiveType::Lines, 2 * GridLinesCnt);
 
-    YAxis[1].position = sf::Vector2f(
-        this->LeftCorner.x + (this->RightCorner.x - this->LeftCorner.x) / 2, 
-        this->RightCorner.y
-    );
+        for (size_t LineNum = 0; LineNum < GridLinesCnt; ++LineNum) {
+            Grid[2 * LineNum].color = Grid[2 * LineNum + 1].color = GridLineColor;
 
-    Window.draw(XAxis);
-    Window.draw(YAxis);
+            Grid[2 * LineNum]    .position.x = this->LeftCorner .x;
+            Grid[2 * LineNum + 1].position.x = this->RightCorner.x;
 
-    return Common::Error::SUCCESS;
+            Grid[2 * LineNum].position.y = this->LeftCorner.y + ScaleY * LineNum;
+            Grid[2 * LineNum + 1].position.y = Grid[2 * LineNum].position.y;
+        }
+
+        return Grid;
+    } else {
+        const size_t GridLinesCnt = (this->RightCorner.x - this->LeftCorner.x) / this->ScaleX + 1;
+
+        sf::VertexArray Grid(sf::PrimitiveType::Lines, 2 * GridLinesCnt);
+
+        for (size_t LineNum = 0; LineNum < GridLinesCnt; ++LineNum) {
+            Grid[2 * LineNum].color = Grid[2 * LineNum + 1].color = GridLineColor;
+
+            Grid[2 * LineNum]    .position.y = this->LeftCorner .y;
+            Grid[2 * LineNum + 1].position.y = this->RightCorner.y;
+
+            Grid[2 * LineNum].position.x = this->LeftCorner.x + ScaleX * LineNum;
+            Grid[2 * LineNum + 1].position.x = Grid[2 * LineNum].position.x;
+        }
+
+        return Grid;
+    }
+
 }

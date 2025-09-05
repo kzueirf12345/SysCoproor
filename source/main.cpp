@@ -21,6 +21,10 @@ int main()
     const sf::Color PlotBGColor(249, 248, 247);
     const sf::Color PlotFGColor(49, 48, 47);
 
+    constexpr unsigned int ScaleX = 13;
+    constexpr unsigned int ScaleY = 13;
+    const sf::Vector2f OriginOffset(ScaleX >> 1, ScaleY >> 1);
+
     sf::RenderWindow Window(
         sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
         // sf::VideoMode(),
@@ -33,7 +37,9 @@ int main()
         sf::Vector2f(BIG_PLOT_MARGIN + BIG_PLOT_SIZE, BIG_PLOT_MARGIN + BIG_PLOT_SIZE), 
         PlotBGColor, 
         PlotFGColor,
-        5
+        ScaleX,
+        ScaleY,
+        OriginOffset
     );
 
     SysCopro::Plot SmallPlot(
@@ -41,7 +47,9 @@ int main()
         sf::Vector2f(WINDOW_WIDTH - SMALL_PLOT_MARGIN, SMALL_PLOT_MARGIN + SMALL_PLOT_SIZE), 
         PlotBGColor, 
         PlotFGColor,
-        5
+        ScaleX,
+        ScaleY,
+        OriginOffset
     );
 
     while (Window.isOpen())
