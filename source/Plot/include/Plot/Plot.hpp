@@ -6,7 +6,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include "Common/ErrorHandle.hpp"
-// #include "Vector/Vector.hpp"
+#include "Vector/Vector.hpp"
 
 namespace SysCopro
 {
@@ -17,7 +17,6 @@ private:
     sf::Vector2f    RightCorner;
     sf::Color       BGColor;
     sf::Color       GridColor;
-    sf::Color       PlotColor;
     unsigned int    ScaleX;
     unsigned int    ScaleY;
     sf::Vector2f    OriginOffset;
@@ -31,16 +30,19 @@ private:
 
 public:
     Plot(sf::Vector2f LeftCorner, sf::Vector2f RightCorner, sf::Color BGColor, sf::Color GridColor, 
-         sf::Color PlotColor, unsigned int ScaleX, unsigned int ScaleY, sf::Vector2f OriginOffset)
+         unsigned int ScaleX, unsigned int ScaleY, sf::Vector2f OriginOffset)
        : LeftCorner{LeftCorner}, RightCorner{RightCorner}, BGColor{BGColor}, GridColor{GridColor}, 
-         PlotColor{PlotColor}, OriginOffset{OriginOffset}
+         OriginOffset{OriginOffset}
     { 
         this->ScaleX = (RightCorner.x - LeftCorner.x) / ScaleX;
         this->ScaleY = (RightCorner.y - LeftCorner.y) / ScaleY;
     }
 
-    Common::Error PrintSysCopro(sf::RenderWindow& Renderer) const;
-    Common::Error PrintPlot(sf::RenderWindow& Renderer, float (* const Func)(const float X)) const;
+    Common::Error PrintSysCopro (sf::RenderWindow& Window) const;
+    Common::Error PrintPlot     (sf::RenderWindow& Window, float (* const Func)(const float X), 
+                                 sf::Color Color) const;
+    Common::Error PrintVector   (sf::RenderWindow& Window, const SysCopro::Vector& Vector,
+                                 sf::Color Color) const;
 
     ~Plot() = default;
 };

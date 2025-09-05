@@ -1,21 +1,19 @@
 #ifndef SYS_COPROOR_SOURCE_VECTOR_INCLUDE_VECTOR_VECTOR_HPP
 #define SYS_COPROOR_SOURCE_VECTOR_INCLUDE_VECTOR_VECTOR_HPP
 
-#include <cstdint>
+#include <SFML/System/Vector2.hpp>
 
 namespace SysCopro
 {
 class Vector {
 private:
-    uint64_t x;
-    uint64_t y;
 public:
-    Vector(uint64_t x, uint64_t y) 
-        : x{x}, y{y} 
-    {};
+    sf::Vector2f Begin;
+    sf::Vector2f End;
 
-    [[nodiscard]] uint64_t GetX() const;
-    [[nodiscard]] uint64_t GetY() const;
+    Vector(sf::Vector2f Begin, sf::Vector2f End) 
+        : Begin{Begin}, End{End} 
+    {};
 
     ~Vector() = default;
 };

@@ -11,6 +11,7 @@
 
 #include "Common/ErrorHandle.hpp"
 #include "Plot/Plot.hpp"
+#include "Vector/Vector.hpp"
 
 Common::Error SysCopro::Plot::PrintSysCopro(sf::RenderWindow& Window) const {
 
@@ -66,12 +67,12 @@ sf::VertexArray SysCopro::Plot::CreateAxis(const bool IsX) const
 
 sf::VertexArray SysCopro::Plot::CreateGrid(const bool IsX) const
 {
-    constexpr sf::Uint8 GridLineOpacity = 25;
+    constexpr sf::Uint8 GRID_LINE_OPACITY = 25;
     const sf::Color GridLineColor(
         this->GridColor.r, 
         this->GridColor.g, 
         this->GridColor.b, 
-        GridLineOpacity
+        GRID_LINE_OPACITY
     );
 
     if (IsX) {
@@ -110,22 +111,23 @@ sf::VertexArray SysCopro::Plot::CreateGrid(const bool IsX) const
 }
 
 Common::Error SysCopro::Plot::PrintPlot(sf::RenderWindow& Window, 
-                                        float (* const Func)(const float X)) const {
-    constexpr size_t DotsCnt = 2048;
+                                        float (* const Func)(const float X),
+                                        sf::Color Color) const {
+    constexpr size_t DOTS_CNT = 2048;
 
     sf::VertexArray Line(sf::PrimitiveType::LinesStrip);
 
-    const float Step = (Pix2Seg(RightCorner).x - Pix2Seg(LeftCorner).x) / DotsCnt;
+    const float Step = (Pix2Seg(RightCorner).x - Pix2Seg(LeftCorner).x) / DOTS_CNT;
     const float MinSegX = Pix2Seg(LeftCorner).x;
     const float MaxSegX = Pix2Seg(RightCorner).x;
 
-    for (size_t DotNum = 0; DotNum < DotsCnt; ++DotNum) {
+    for (size_t DotNum = 0; DotNum < DOTS_CNT; ++DotNum) {
         const float CurSegX = MinSegX + DotNum * Step;
         const float CurSegY = Func(CurSegX);
-        const sf::Vector2f CurPixDot = Seg2Pix(sf::Vector2f(CurSegX, -CurSegY));
+        const sf::Vector2f CurPixDot = Seg2Pix(sf::Vector2f(CurSegX, CurSegY));
 
         if (this->LeftCorner.y <= CurPixDot.y && CurPixDot.y <= this->RightCorner.y) {
-            Line.append(sf::Vertex(CurPixDot, this->PlotColor));
+            Line.append(sf::Vertex(CurPixDot, Color));
         } else {
             Window.draw(Line);
             Line.clear();
@@ -139,11 +141,46 @@ Common::Error SysCopro::Plot::PrintPlot(sf::RenderWindow& Window,
 sf::Vector2f SysCopro::Plot::Seg2Pix(const sf::Vector2f SegDot) const
 {
     return sf::Vector2f(this->LeftCorner.x + this->ScaleX * (this->OriginOffset.x + SegDot.x),
-                        this->LeftCorner.y + this->ScaleY * (this->OriginOffset.y + SegDot.y));
+                        this->LeftCorner.y + this->ScaleY * (this->OriginOffset.y - SegDot.y));
 }
 
 sf::Vector2f SysCopro::Plot::Pix2Seg(const sf::Vector2f PixDot) const
 {
-    return sf::Vector2f((PixDot.x - this->LeftCorner.x) / this->ScaleX - this->OriginOffset.x,
-                        (PixDot.y - this->LeftCorner.y) / this->ScaleY - this->OriginOffset.y);
+    return sf::Vector2f(( PixDot.x - this->LeftCorner.x) / this->ScaleX - this->OriginOffset.x,
+                        (-PixDot.y + this->LeftCorner.y) / this->ScaleY + this->OriginOffset.y);
+}
+
+Common::Error SysCopro::Plot::PrintVector(sf::RenderWindow& Window, 
+                                          const SysCopro::Vector& Vector,
+                                          sf::Color Color) const {
+
+    sf::VertexArray Line(sf::PrimitiveType::Lines, 2);
+    sf::VertexArray Tip (sf::PrimitiveType::Lines, 3);
+
+    Line[0].color = Line[1].color                = Color;
+    Tip[0].color  = Tip[1].color  = Tip[2].color = Color;
+
+    Line[0].position = Seg2Pix(Vector.Begin);
+    Line[1].position = Seg2Pix(Vector.End);
+    Tip[1].position  = Line[1].position;
+
+    constexpr float TIP_ANGLE_DEGREES = 10;
+    constexpr float TIP_ANDLE_RADIANS = TIP_ANGLE_DEGREES * M_PI / 180.0;
+    constexpr float TIP_SCALE         = 0.1;
+
+    const sf::Vector2f TipEndNoRotate = Vector.End * (1 - TIP_SCALE);
+
+    Tip[0].position.x =   TipEndNoRotate.x * std::cos(TIP_ANDLE_RADIANS) - TipEndNoRotate.y * std::sin(TIP_ANDLE_RADIANS);
+    Tip[0].position.y =   TipEndNoRotate.x * std::sin(TIP_ANDLE_RADIANS) + TipEndNoRotate.y * std::cos(TIP_ANDLE_RADIANS);
+    
+    Tip[2].position.x =   TipEndNoRotate.x * std::cos(TIP_ANDLE_RADIANS) + TipEndNoRotate.y * std::sin(TIP_ANDLE_RADIANS);
+    Tip[2].position.y = - TipEndNoRotate.x * std::sin(TIP_ANDLE_RADIANS) + TipEndNoRotate.y * std::cos(TIP_ANDLE_RADIANS);
+
+    Tip[0].position = Seg2Pix(Tip[0].position);
+    Tip[2].position = Seg2Pix(Tip[2].position);
+
+    Window.draw(Line);
+    Window.draw(Tip);
+    
+    return Common::Error::SUCCESS;
 }

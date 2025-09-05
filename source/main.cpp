@@ -8,6 +8,7 @@
 
 #include "Plot/Plot.hpp"
 #include "Common/ErrorHandle.hpp"
+#include "Vector/Vector.hpp"
 
 int main()
 {
@@ -40,7 +41,6 @@ int main()
         sf::Vector2f(BIG_PLOT_MARGIN + BIG_PLOT_SIZE, BIG_PLOT_MARGIN + BIG_PLOT_SIZE), 
         PlotBGColor, 
         PlotGridColor,
-        PlotPlotColor,
         ScaleX,
         ScaleY,
         OriginOffset
@@ -51,7 +51,6 @@ int main()
         sf::Vector2f(WINDOW_WIDTH - SMALL_PLOT_MARGIN, SMALL_PLOT_MARGIN + SMALL_PLOT_SIZE), 
         PlotBGColor, 
         PlotGridColor,
-        PlotPlotColor,
         ScaleX,
         ScaleY,
         OriginOffset
@@ -70,10 +69,18 @@ int main()
 
         ERROR_HANDLE(BigPlot.   PrintSysCopro   (Window));
         ERROR_HANDLE(SmallPlot. PrintSysCopro   (Window));
-        ERROR_HANDLE(BigPlot.   PrintPlot       (Window, std::tan));
-        ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::tan));
-        ERROR_HANDLE(BigPlot.   PrintPlot       (Window, std::sin));
-        ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::sin));
+        // ERROR_HANDLE(BigPlot.   PrintPlot       (Window, std::tan, PlotPlotColor));
+        // ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::tan, PlotPlotColor));
+        // ERROR_HANDLE(BigPlot.   PrintPlot       (Window, std::sin, PlotPlotColor));
+        // ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::sin, PlotPlotColor));
+        ERROR_HANDLE(BigPlot.PrintVector(
+            Window, 
+            SysCopro::Vector(
+                sf::Vector2f(0, 0), 
+                sf::Vector2f(1, 1)
+            ), 
+            PlotPlotColor)
+        );
 
         Window.display();
     }
