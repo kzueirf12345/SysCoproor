@@ -1,6 +1,8 @@
 #ifndef SYS_COPROOR_SOURCE_PLOT_INCLUDE_PLOT_PLOT_HPP
 #define SYS_COPROOR_SOURCE_PLOT_INCLUDE_PLOT_PLOT_HPP
 
+#include <vector>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/System/Vector2.hpp>
@@ -16,26 +18,27 @@ private:
     sf::Vector2f    LeftCorner;
     sf::Vector2f    RightCorner;
     sf::Color       BGColor;
-    sf::Color       FGColor;
+    sf::Color       GridColor;
+    sf::Color       PlotColor;
     unsigned int    ScaleX;
     unsigned int    ScaleY;
     sf::Vector2f    OriginOffset;
     float (* const Func)(const float X);
 
-    sf::RectangleShape CreateBG      ()                          const ;
-    sf::VertexArray    CreateAxis    (const bool IsX)            const ;
-    sf::VertexArray    CreateGrid    (const bool IsX)            const ;
-    sf::VertexArray    CreateFuncPlot(const size_t DotsCnt)      const ;
+    sf::RectangleShape              CreateBG      ()                          const ;
+    sf::VertexArray                 CreateAxis    (const bool IsX)            const ;
+    sf::VertexArray                 CreateGrid    (const bool IsX)            const ;
+    std::vector<sf::VertexArray>    CreateFuncPlot(const size_t DotsCnt)      const ;
 
-    sf::Vector2f       Seg2Pix       (const sf::Vector2f SegDot) const;
-    sf::Vector2f       Pix2Seg       (const sf::Vector2f PixDot) const;
+    sf::Vector2f                    Seg2Pix       (const sf::Vector2f SegDot) const;
+    sf::Vector2f                    Pix2Seg       (const sf::Vector2f PixDot) const;
 
 public:
-    Plot(sf::Vector2f LeftCorner, sf::Vector2f RightCorner, sf::Color BGColor, sf::Color FGColor, 
-         unsigned int ScaleX, unsigned int ScaleY, sf::Vector2f OriginOffset, 
+    Plot(sf::Vector2f LeftCorner, sf::Vector2f RightCorner, sf::Color BGColor, sf::Color GridColor, 
+         sf::Color PlotColor, unsigned int ScaleX, unsigned int ScaleY, sf::Vector2f OriginOffset, 
          float (* const Func)(const float X))
-       : LeftCorner{LeftCorner}, RightCorner{RightCorner}, BGColor{BGColor}, FGColor{FGColor}, 
-         OriginOffset{OriginOffset}, Func(Func)
+       : LeftCorner{LeftCorner}, RightCorner{RightCorner}, BGColor{BGColor}, GridColor{GridColor}, 
+         PlotColor{PlotColor}, OriginOffset{OriginOffset}, Func(Func)
     { 
         this->ScaleX = (RightCorner.x - LeftCorner.x) / ScaleX;
         this->ScaleY = (RightCorner.y - LeftCorner.y) / ScaleY;
