@@ -13,7 +13,7 @@
 #include <cstddef>
 
 #include "Common/ErrorHandle.hpp"
-#include "Shapes/Circle.hpp"
+#include "Shapes/Sphere.hpp"
 #include "Vector/Vector.hpp"
 #include "Plot/Plot.hpp"
 
@@ -218,31 +218,32 @@ Common::Error SysCopro::TransformVector(sf::Vector2f& Vector, const SysCopro::Tr
     return Common::Error::SUCCESS;
 }
 
-Common::Error SysCopro::Plot::PrintCircle(sf::RenderWindow& Window, 
-                                          const SysCopro::Circle& Circle) const {
-
-    const sf::Color BGHandledColor (16, 16, 16);
-    const sf::Color BaseCircleColor(36, 36, 36);
+Common::Error SysCopro::Plot::PrintSphere(sf::RenderWindow& Window, 
+                                          const SysCopro::Sphere& Sphere) const {
+    constexpr sf::Uint8 BGHandledColorVal  = 16;
+    constexpr sf::Uint8 BaseCircleColorVal = 26;
 
     const unsigned int WindowWidth  = this->RightCorner.x - this->LeftCorner.x;
     const unsigned int WindowHeight = this->RightCorner.y - this->LeftCorner.y;
 
-    sf::VertexArray Screen(sf::PrimitiveType::Points /*WindowWidth * WindowHeight*/ );
+    sf::VertexArray Screen(sf::PrimitiveType::Points /*, WindowWidth * WindowHeight*/ );
 
-    for (unsigned int y = 0; y < WindowHeight; ++y) {
-        for (unsigned int x = 0; x < WindowWidth; ++x) {
+    for (unsigned int y = this->LeftCorner.y; y < this->RightCorner.y; ++y) {
+        for (unsigned int x = this->LeftCorner.x; x < this->RightCorner.x; ++x) {
             const size_t CurInd = y * WindowWidth + x;
-            const SysCopro::Vector2f CurPix(this->LeftCorner.x + x, this->LeftCorner.y + y);
-            const SysCopro::Vector2f CurSeg(Pix2Seg(CurPix));
+            const SysCopro::Vector2f CurPix2(x, y);
+            const SysCopro::Vector2f CurSeg2(Pix2Seg(CurPix2));
+            
+            if (Sphere.IsInside(SysCopro::Vector3f(CurSeg2.x, CurSeg2.y, 0.f))) {
+                const float z = Sphere.Radius * Sphere.Radius - CurSeg2.Len2();
+                const SysCopro::Vector3f RadiusVector(CurSeg2.x, CurSeg2.y, z);
+                const sf::Uint8 ColorVal = BaseCircleColorVal + 160 * (!RadiusVector).z;
+                // std::cerr << (!RadiusVector).z << std::endl;
 
-            
-            // Screen[CurInd].position = LeftCorner + sf::Vector2f(x, y);
-            
-            if (Circle.IsInside(CurSeg)) {
-                Screen.append(sf::Vertex(LeftCorner + sf::Vector2f(x, y), BaseCircleColor));
-                // Screen[CurInd].color = BaseCircleColor;
-            } else {
-                // Screen[CurInd].color = BGHandledColor;
+                Screen.append(sf::Vertex(
+                    sf::Vector2f(x, y),
+                    sf::Color(ColorVal, ColorVal, ColorVal)
+                ));
             }
         }
     }

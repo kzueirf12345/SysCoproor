@@ -9,7 +9,7 @@
 #include <SFML/System/Vector2.hpp>
 
 #include "Common/ErrorHandle.hpp"
-#include "Shapes/Circle.hpp"
+#include "Shapes/Sphere.hpp"
 
 namespace SysCopro
 {
@@ -53,8 +53,8 @@ public:
     Common::Error PrintVector   (sf::RenderWindow& Window, const sf::Vector2f& Vector,
                                  sf::Color Color) const;
 
-    Common::Error PrintCircle   (sf::RenderWindow& Window, 
-                                 const SysCopro::Circle& Circle) const;
+    Common::Error PrintSphere   (sf::RenderWindow& Window, 
+                                 const SysCopro::Sphere& Sphere) const;
 
     ~Plot() = default;
 };

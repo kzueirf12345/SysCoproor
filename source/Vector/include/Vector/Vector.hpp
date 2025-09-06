@@ -33,7 +33,7 @@ T operator ^(const SysCopro::Vector2<T>& left, const SysCopro::Vector2<T>& right
 
 template <typename T>
 SysCopro::Vector2<T> operator !(const SysCopro::Vector2<T>& right) {
-    return right / (right.Len());
+    return SysCopro::Vector2<T>(right / right.Len());
 }
 
 template <typename T>
@@ -72,7 +72,7 @@ T operator ^(const SysCopro::Vector3<T>& left, const SysCopro::Vector3<T>& right
 
 template <typename T>
 SysCopro::Vector3<T> operator !(const SysCopro::Vector3<T>& right) {
-    return right / (right.Len());
+    return SysCopro::Vector3<T>(right / right.Len());
 }
 
 template <typename T>

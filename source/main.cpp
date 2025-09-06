@@ -8,7 +8,7 @@
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 
-#include "Shapes/Circle.hpp"
+#include "Shapes/Sphere.hpp"
 #include "Plot/Plot.hpp"
 #include "Common/ErrorHandle.hpp"
 
@@ -61,10 +61,10 @@ int main()
     sf::Vector2f Vector1(20, 0);
     sf::Vector2f Vector2(20, 0);
 
-    constexpr float FPS = 60;
-    constexpr float SPF = 1 / FPS;
+    // constexpr float FPS = 60;
+    // constexpr float SPF = 1 / FPS;
 
-    sf::Clock Clock;
+    // sf::Clock Clock;
 
     while (Window.isOpen())
     {
@@ -84,8 +84,8 @@ int main()
         // ERROR_HANDLE(BigPlot.   PrintPlot       (Window, std::sin, PlotPlotColor));
         // ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::sin, PlotPlotColor));
         
-        ERROR_HANDLE(BigPlot.  PrintCircle(Window, SysCopro::Circle(20)));
-        ERROR_HANDLE(SmallPlot.PrintCircle(Window, SysCopro::Circle(20)));
+        ERROR_HANDLE(BigPlot.  PrintSphere(Window, SysCopro::Sphere(20)));
+        ERROR_HANDLE(SmallPlot.PrintSphere(Window, SysCopro::Sphere(20)));
         
         // ERROR_HANDLE(BigPlot.  PrintVector(Window, Vector1, PlotPlotColor));
         // ERROR_HANDLE(SmallPlot.PrintVector(Window, Vector2, PlotPlotColor));
@@ -95,8 +95,8 @@ int main()
 
         Window.display();
 
-        while (Clock.getElapsedTime().asSeconds() < SPF);
-        Clock.restart();
+        // while (Clock.getElapsedTime().asSeconds() < SPF);
+        // Clock.restart();
     }
 
     return 0;
