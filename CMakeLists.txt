@@ -10,7 +10,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 add_subdirectory(source/Common)
-add_subdirectory(source/Vector)
 add_subdirectory(source/Plot)
 
 find_package(SFML 2.5.1 COMPONENTS graphics REQUIRED)
@@ -24,6 +23,5 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
         sfml-graphics
 
         Common
-        Vector
         Plot
 )

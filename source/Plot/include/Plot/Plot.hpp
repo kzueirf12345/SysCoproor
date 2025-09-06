@@ -6,10 +6,15 @@
 #include <SFML/System/Vector2.hpp>
 
 #include "Common/ErrorHandle.hpp"
-#include "Vector/Vector.hpp"
 
 namespace SysCopro
 {
+
+enum Transform {
+    NONE            = 0,
+    ROTATE_CLKWISE  = 1,
+    ROTATE_CCLKWISE = 2,
+};
     
 class Plot {
 private:
@@ -41,11 +46,13 @@ public:
     Common::Error PrintSysCopro (sf::RenderWindow& Window) const;
     Common::Error PrintPlot     (sf::RenderWindow& Window, float (* const Func)(const float X), 
                                  sf::Color Color) const;
-    Common::Error PrintVector   (sf::RenderWindow& Window, const SysCopro::Vector& Vector,
+    Common::Error PrintVector   (sf::RenderWindow& Window, const sf::Vector2f& Vector,
                                  sf::Color Color) const;
 
     ~Plot() = default;
 };
+
+Common::Error TransformVector(sf::Vector2f& Vector, const SysCopro::Transform Transform);
 
 }
 

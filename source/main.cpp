@@ -1,3 +1,5 @@
+#include <SFML/Config.hpp>
+#include <SFML/System/Clock.hpp>
 #include <cmath>
 
 #include <SFML/Graphics.hpp>
@@ -8,7 +10,6 @@
 
 #include "Plot/Plot.hpp"
 #include "Common/ErrorHandle.hpp"
-#include "Vector/Vector.hpp"
 
 int main()
 {
@@ -56,6 +57,14 @@ int main()
         OriginOffset
     );
 
+    sf::Vector2f Vector1(4, 0);
+    sf::Vector2f Vector2(4, 0);
+
+    constexpr float FPS = 60;
+    constexpr float SPF = 1 / FPS;
+
+    sf::Clock Clock;
+
     while (Window.isOpen())
     {
         sf::Event Event;
@@ -67,22 +76,22 @@ int main()
 
         Window.clear();
 
-        ERROR_HANDLE(BigPlot.   PrintSysCopro   (Window));
-        ERROR_HANDLE(SmallPlot. PrintSysCopro   (Window));
+        ERROR_HANDLE(BigPlot.   PrintSysCopro      (Window));
+        ERROR_HANDLE(SmallPlot. PrintSysCopro      (Window));
         // ERROR_HANDLE(BigPlot.   PrintPlot       (Window, std::tan, PlotPlotColor));
         // ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::tan, PlotPlotColor));
         // ERROR_HANDLE(BigPlot.   PrintPlot       (Window, std::sin, PlotPlotColor));
         // ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::sin, PlotPlotColor));
-        ERROR_HANDLE(BigPlot.PrintVector(
-            Window, 
-            SysCopro::Vector(
-                sf::Vector2f(0, 0), 
-                sf::Vector2f(1, 1)
-            ), 
-            PlotPlotColor)
-        );
+        ERROR_HANDLE(BigPlot.  PrintVector(Window, Vector1, PlotPlotColor));
+        ERROR_HANDLE(SmallPlot.PrintVector(Window, Vector2, PlotPlotColor));
+
+        ERROR_HANDLE(SysCopro::TransformVector(Vector1, SysCopro::Transform::ROTATE_CLKWISE));
+        ERROR_HANDLE(SysCopro::TransformVector(Vector2, SysCopro::Transform::ROTATE_CCLKWISE));
 
         Window.display();
+
+        while (Clock.getElapsedTime().asSeconds() < SPF);
+        Clock.restart();
     }
 
     return 0;

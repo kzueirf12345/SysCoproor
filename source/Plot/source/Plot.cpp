@@ -11,7 +11,6 @@
 
 #include "Common/ErrorHandle.hpp"
 #include "Plot/Plot.hpp"
-#include "Vector/Vector.hpp"
 
 Common::Error SysCopro::Plot::PrintSysCopro(sf::RenderWindow& Window) const {
 
@@ -150,31 +149,39 @@ sf::Vector2f SysCopro::Plot::Pix2Seg(const sf::Vector2f PixDot) const
                         (-PixDot.y + this->LeftCorner.y) / this->ScaleY + this->OriginOffset.y);
 }
 
-Common::Error SysCopro::Plot::PrintVector(sf::RenderWindow& Window, 
-                                          const SysCopro::Vector& Vector,
+Common::Error SysCopro::Plot::PrintVector(sf::RenderWindow& Window, const sf::Vector2f& Vector,
                                           sf::Color Color) const {
 
-    sf::VertexArray Line(sf::PrimitiveType::Lines, 2);
-    sf::VertexArray Tip (sf::PrimitiveType::Lines, 3);
+    sf::VertexArray Line(sf::PrimitiveType::LinesStrip, 2);
+    sf::VertexArray Tip (sf::PrimitiveType::LinesStrip, 3);
 
     Line[0].color = Line[1].color                = Color;
     Tip[0].color  = Tip[1].color  = Tip[2].color = Color;
 
-    Line[0].position = Seg2Pix(Vector.Begin);
-    Line[1].position = Seg2Pix(Vector.End);
+    Line[0].position = Seg2Pix(sf::Vector2f(0, 0));
+    Line[1].position = Seg2Pix(Vector);
     Tip[1].position  = Line[1].position;
 
-    constexpr float TIP_ANGLE_DEGREES = 10;
-    constexpr float TIP_ANDLE_RADIANS = TIP_ANGLE_DEGREES * M_PI / 180.0;
-    constexpr float TIP_SCALE         = 0.1;
+    constexpr float TIP_ANGLE_DEGREES = 20;
+    constexpr float TIP_ANGLE_RADIANS = TIP_ANGLE_DEGREES * M_PI / 180.0;
+    constexpr float TIP_SCALE         = 0.3;
 
-    const sf::Vector2f TipEndNoRotate = Vector.End * (1 - TIP_SCALE);
+    const sf::Vector2f ScaledTendril = -Vector * TIP_SCALE;
 
-    Tip[0].position.x =   TipEndNoRotate.x * std::cos(TIP_ANDLE_RADIANS) - TipEndNoRotate.y * std::sin(TIP_ANDLE_RADIANS);
-    Tip[0].position.y =   TipEndNoRotate.x * std::sin(TIP_ANDLE_RADIANS) + TipEndNoRotate.y * std::cos(TIP_ANDLE_RADIANS);
+
+    Tip[0].position.x = Vector.x 
+                      + ScaledTendril.x * std::cos( TIP_ANGLE_RADIANS) 
+                      - ScaledTendril.y * std::sin( TIP_ANGLE_RADIANS);
+    Tip[0].position.y = Vector.y 
+                      + ScaledTendril.x * std::sin( TIP_ANGLE_RADIANS) 
+                      + ScaledTendril.y * std::cos( TIP_ANGLE_RADIANS);
     
-    Tip[2].position.x =   TipEndNoRotate.x * std::cos(TIP_ANDLE_RADIANS) + TipEndNoRotate.y * std::sin(TIP_ANDLE_RADIANS);
-    Tip[2].position.y = - TipEndNoRotate.x * std::sin(TIP_ANDLE_RADIANS) + TipEndNoRotate.y * std::cos(TIP_ANDLE_RADIANS);
+    Tip[2].position.x = Vector.x 
+                      + ScaledTendril.x * std::cos( TIP_ANGLE_RADIANS) 
+                      - ScaledTendril.y * std::sin(-TIP_ANGLE_RADIANS);
+    Tip[2].position.y = Vector.y 
+                      + ScaledTendril.x * std::sin(-TIP_ANGLE_RADIANS) 
+                      + ScaledTendril.y * std::cos( TIP_ANGLE_RADIANS);
 
     Tip[0].position = Seg2Pix(Tip[0].position);
     Tip[2].position = Seg2Pix(Tip[2].position);
@@ -182,5 +189,26 @@ Common::Error SysCopro::Plot::PrintVector(sf::RenderWindow& Window,
     Window.draw(Line);
     Window.draw(Tip);
     
+    return Common::Error::SUCCESS;
+}
+
+Common::Error SysCopro::TransformVector(sf::Vector2f& Vector, const SysCopro::Transform Transform) {
+    constexpr float DELTA_ANGLE_RADIANS = 0.01;
+    float RotateAngleRadians = NAN;
+
+    switch (Transform) {
+        case SysCopro::Transform::ROTATE_CLKWISE:  RotateAngleRadians =  DELTA_ANGLE_RADIANS; break;
+        case SysCopro::Transform::ROTATE_CCLKWISE: RotateAngleRadians = -DELTA_ANGLE_RADIANS; break;
+        case SysCopro::Transform::NONE:            RotateAngleRadians = 0;                    break;
+        
+        default:
+            break;
+    }
+
+    Vector = sf::Vector2f(
+        Vector.x * std::cos(RotateAngleRadians) - Vector.y * std::sin(RotateAngleRadians),
+        Vector.x * std::sin(RotateAngleRadians) + Vector.y * std::cos(RotateAngleRadians)
+    );
+
     return Common::Error::SUCCESS;
 }

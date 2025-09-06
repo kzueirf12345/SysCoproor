@@ -13,5 +13,4 @@ target_include_directories(Plot
 target_link_libraries(Plot
     PRIVATE 
         Common
-        Vector
 )
