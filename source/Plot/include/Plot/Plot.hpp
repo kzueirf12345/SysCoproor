@@ -1,11 +1,15 @@
 #ifndef SYS_COPROOR_SOURCE_PLOT_INCLUDE_PLOT_PLOT_HPP
 #define SYS_COPROOR_SOURCE_PLOT_INCLUDE_PLOT_PLOT_HPP
 
+#include <cmath>
+
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Vector2.hpp>
 
 #include "Common/ErrorHandle.hpp"
+#include "Shapes/Circle.hpp"
 
 namespace SysCopro
 {
@@ -48,6 +52,9 @@ public:
                                  sf::Color Color) const;
     Common::Error PrintVector   (sf::RenderWindow& Window, const sf::Vector2f& Vector,
                                  sf::Color Color) const;
+
+    Common::Error PrintCircle   (sf::RenderWindow& Window, 
+                                 const SysCopro::Circle& Circle) const;
 
     ~Plot() = default;
 };

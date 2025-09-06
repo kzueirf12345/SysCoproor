@@ -8,6 +8,7 @@
 #include <SFML/Window/VideoMode.hpp>
 #include <SFML/Window/WindowStyle.hpp>
 
+#include "Shapes/Circle.hpp"
 #include "Plot/Plot.hpp"
 #include "Common/ErrorHandle.hpp"
 
@@ -26,8 +27,8 @@ int main()
     const sf::Color PlotPlotColor(149, 148, 147);
     const sf::Color PlotGridColor( 49,  48,  47);
 
-    constexpr unsigned int ScaleX = 10;
-    constexpr unsigned int ScaleY = 10;
+    constexpr unsigned int ScaleX = 100;
+    constexpr unsigned int ScaleY = 100;
     const sf::Vector2f OriginOffset(ScaleX >> 1, ScaleY >> 1);
 
     sf::RenderWindow Window(
@@ -57,8 +58,8 @@ int main()
         OriginOffset
     );
 
-    sf::Vector2f Vector1(4, 0);
-    sf::Vector2f Vector2(4, 0);
+    sf::Vector2f Vector1(20, 0);
+    sf::Vector2f Vector2(20, 0);
 
     constexpr float FPS = 60;
     constexpr float SPF = 1 / FPS;
@@ -82,11 +83,15 @@ int main()
         // ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::tan, PlotPlotColor));
         // ERROR_HANDLE(BigPlot.   PrintPlot       (Window, std::sin, PlotPlotColor));
         // ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::sin, PlotPlotColor));
-        ERROR_HANDLE(BigPlot.  PrintVector(Window, Vector1, PlotPlotColor));
-        ERROR_HANDLE(SmallPlot.PrintVector(Window, Vector2, PlotPlotColor));
+        
+        ERROR_HANDLE(BigPlot.  PrintCircle(Window, SysCopro::Circle(20)));
+        ERROR_HANDLE(SmallPlot.PrintCircle(Window, SysCopro::Circle(20)));
+        
+        // ERROR_HANDLE(BigPlot.  PrintVector(Window, Vector1, PlotPlotColor));
+        // ERROR_HANDLE(SmallPlot.PrintVector(Window, Vector2, PlotPlotColor));
+        // ERROR_HANDLE(SysCopro::TransformVector(Vector1, SysCopro::Transform::ROTATE_CLKWISE));
+        // ERROR_HANDLE(SysCopro::TransformVector(Vector2, SysCopro::Transform::ROTATE_CCLKWISE));
 
-        ERROR_HANDLE(SysCopro::TransformVector(Vector1, SysCopro::Transform::ROTATE_CLKWISE));
-        ERROR_HANDLE(SysCopro::TransformVector(Vector2, SysCopro::Transform::ROTATE_CCLKWISE));
 
         Window.display();
 

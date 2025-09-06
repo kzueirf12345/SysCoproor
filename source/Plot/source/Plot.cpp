@@ -1,3 +1,5 @@
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/VertexBuffer.hpp>
 #include <cmath>
 
 #include <SFML/Config.hpp>
@@ -8,8 +10,11 @@
 #include <SFML/Graphics/Shape.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/System/Vector2.hpp>
+#include <cstddef>
 
 #include "Common/ErrorHandle.hpp"
+#include "Shapes/Circle.hpp"
+#include "Vector/Vector.hpp"
 #include "Plot/Plot.hpp"
 
 Common::Error SysCopro::Plot::PrintSysCopro(sf::RenderWindow& Window) const {
@@ -112,7 +117,7 @@ sf::VertexArray SysCopro::Plot::CreateGrid(const bool IsX) const
 Common::Error SysCopro::Plot::PrintPlot(sf::RenderWindow& Window, 
                                         float (* const Func)(const float X),
                                         sf::Color Color) const {
-    constexpr size_t DOTS_CNT = 2048;
+    constexpr size_t DOTS_CNT = 1000;
 
     sf::VertexArray Line(sf::PrimitiveType::LinesStrip);
 
@@ -209,6 +214,40 @@ Common::Error SysCopro::TransformVector(sf::Vector2f& Vector, const SysCopro::Tr
         Vector.x * std::cos(RotateAngleRadians) - Vector.y * std::sin(RotateAngleRadians),
         Vector.x * std::sin(RotateAngleRadians) + Vector.y * std::cos(RotateAngleRadians)
     );
+
+    return Common::Error::SUCCESS;
+}
+
+Common::Error SysCopro::Plot::PrintCircle(sf::RenderWindow& Window, 
+                                          const SysCopro::Circle& Circle) const {
+
+    const sf::Color BGHandledColor (16, 16, 16);
+    const sf::Color BaseCircleColor(36, 36, 36);
+
+    const unsigned int WindowWidth  = this->RightCorner.x - this->LeftCorner.x;
+    const unsigned int WindowHeight = this->RightCorner.y - this->LeftCorner.y;
+
+    sf::VertexArray Screen(sf::PrimitiveType::Points /*WindowWidth * WindowHeight*/ );
+
+    for (unsigned int y = 0; y < WindowHeight; ++y) {
+        for (unsigned int x = 0; x < WindowWidth; ++x) {
+            const size_t CurInd = y * WindowWidth + x;
+            const SysCopro::Vector2f CurPix(this->LeftCorner.x + x, this->LeftCorner.y + y);
+            const SysCopro::Vector2f CurSeg(Pix2Seg(CurPix));
+
+            
+            // Screen[CurInd].position = LeftCorner + sf::Vector2f(x, y);
+            
+            if (Circle.IsInside(CurSeg)) {
+                Screen.append(sf::Vertex(LeftCorner + sf::Vector2f(x, y), BaseCircleColor));
+                // Screen[CurInd].color = BaseCircleColor;
+            } else {
+                // Screen[CurInd].color = BGHandledColor;
+            }
+        }
+    }
+
+    Window.draw(Screen);
 
     return Common::Error::SUCCESS;
 }
