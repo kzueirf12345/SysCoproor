@@ -197,29 +197,9 @@ Common::Error SysCopro::Plot::PrintVector(sf::RenderWindow& Window, const sf::Ve
     return Common::Error::SUCCESS;
 }
 
-Common::Error SysCopro::TransformVector(sf::Vector2f& Vector, const SysCopro::Transform Transform) {
-    constexpr float DELTA_ANGLE_RADIANS = 0.01;
-    float RotateAngleRadians = NAN;
-
-    switch (Transform) {
-        case SysCopro::Transform::ROTATE_CLKWISE:  RotateAngleRadians =  DELTA_ANGLE_RADIANS; break;
-        case SysCopro::Transform::ROTATE_CCLKWISE: RotateAngleRadians = -DELTA_ANGLE_RADIANS; break;
-        case SysCopro::Transform::NONE:            RotateAngleRadians = 0;                    break;
-        
-        default:
-            break;
-    }
-
-    Vector = sf::Vector2f(
-        Vector.x * std::cos(RotateAngleRadians) - Vector.y * std::sin(RotateAngleRadians),
-        Vector.x * std::sin(RotateAngleRadians) + Vector.y * std::cos(RotateAngleRadians)
-    );
-
-    return Common::Error::SUCCESS;
-}
-
 Common::Error SysCopro::Plot::PrintSphere(sf::RenderWindow& Window, 
-                                          const SysCopro::Sphere& Sphere) const {
+                                          const SysCopro::Sphere& Sphere,
+                                          const SysCopro::Vector3f& LightSource) const {
     constexpr sf::Uint8 BGHandledColorVal  = 16;
     constexpr sf::Uint8 BaseCircleColorVal = 26;
 
@@ -235,10 +215,21 @@ Common::Error SysCopro::Plot::PrintSphere(sf::RenderWindow& Window,
             const SysCopro::Vector2f CurSeg2(Pix2Seg(CurPix2));
             
             if (Sphere.IsInside(SysCopro::Vector3f(CurSeg2.x, CurSeg2.y, 0.f))) {
-                const float z = Sphere.Radius * Sphere.Radius - CurSeg2.Len2();
+                const float z = std::sqrt(Sphere.Radius * Sphere.Radius - CurSeg2.Len2());
                 const SysCopro::Vector3f RadiusVector(CurSeg2.x, CurSeg2.y, z);
-                const sf::Uint8 ColorVal = BaseCircleColorVal + 160 * (!RadiusVector).z;
-                // std::cerr << (!RadiusVector).z << std::endl;
+
+                constexpr float DIFF_COEF = 0.8;
+                const float DiffVal = std::max(
+                    0.f, 
+                    !RadiusVector ^ !SysCopro::Vector3f(LightSource - RadiusVector)
+                );
+
+                constexpr float AMBIENT_COEF = 0.2;
+
+                const float BrightCoef = AMBIENT_COEF + DIFF_COEF * DiffVal;
+
+                const sf::Uint8 ColorVal = BaseCircleColorVal 
+                                         + (255 - BaseCircleColorVal) * BrightCoef;
 
                 Screen.append(sf::Vertex(
                     sf::Vector2f(x, y),

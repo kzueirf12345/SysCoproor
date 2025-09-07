@@ -6,8 +6,24 @@
 #include <SFML/System/Vector2.hpp>
 #include <SFML/System/Vector3.hpp>
 
+#include "Common/ErrorHandle.hpp"
+
 namespace SysCopro
 {
+
+enum class Axis {
+    X = 0,
+    Y = 1,
+    Z = 2
+};
+
+enum Transform {
+    NONE            = 0,
+    ROTATE_CLKWISE  = 1,
+    ROTATE_CCLKWISE = 2,
+};
+
+//--------------------------------------------------------------------------------------------------
 
 template <typename T>
 class Vector2: public sf::Vector2<T> {
@@ -45,6 +61,8 @@ template <typename T>
 T SysCopro::Vector2<T>::Len() const {
     return std::sqrt(this->Len2());
 }
+
+Common::Error TransformVector(SysCopro::Vector2f& Vector, const SysCopro::Transform Transform);
 
 //--------------------------------------------------------------------------------------------------
 
@@ -84,6 +102,9 @@ template <typename T>
 T SysCopro::Vector3<T>::Len() const {
     return std::sqrt(this->Len2());
 }
+
+Common::Error TransformVector(SysCopro::Vector3f& Vector, const SysCopro::Transform Transform, 
+                              SysCopro::Axis Axis);
 
 }
 

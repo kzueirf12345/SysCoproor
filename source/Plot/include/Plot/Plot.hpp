@@ -10,15 +10,10 @@
 
 #include "Common/ErrorHandle.hpp"
 #include "Shapes/Sphere.hpp"
+#include "Vector/Vector.hpp"
 
 namespace SysCopro
 {
-
-enum Transform {
-    NONE            = 0,
-    ROTATE_CLKWISE  = 1,
-    ROTATE_CCLKWISE = 2,
-};
     
 class Plot {
 private:
@@ -54,12 +49,11 @@ public:
                                  sf::Color Color) const;
 
     Common::Error PrintSphere   (sf::RenderWindow& Window, 
-                                 const SysCopro::Sphere& Sphere) const;
+                                 const SysCopro::Sphere& Sphere,
+                                 const SysCopro::Vector3f& LightSource) const;
 
     ~Plot() = default;
 };
-
-Common::Error TransformVector(sf::Vector2f& Vector, const SysCopro::Transform Transform);
 
 }
 

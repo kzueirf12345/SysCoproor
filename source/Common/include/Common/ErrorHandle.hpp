@@ -12,8 +12,9 @@ namespace Common
 {
 
 enum Error {
-    SUCCESS        = 0,
-    STANDART_ERRNO = 1,
+    SUCCESS          = 0,
+    STANDART_ERRNO   = 1,
+    UNKNOWN_ENUM_ARG = 2
 };
 
 std::string ErrorToString(const enum Common::Error Error);
