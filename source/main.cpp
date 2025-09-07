@@ -64,6 +64,8 @@ int main()
 
     SysCopro::Vector3f Light1(100, 100, 100);
     SysCopro::Vector3f Light2(100, 100, 100);
+    SysCopro::Vector3f Viewer1(0, 0, 100);
+    SysCopro::Vector3f Viewer2(0, 0, 100);
 
 
     // constexpr float FPS = 60;
@@ -89,8 +91,8 @@ int main()
         // ERROR_HANDLE(BigPlot.   PrintPlot       (Window, std::sin, PlotPlotColor));
         // ERROR_HANDLE(SmallPlot. PrintPlot       (Window, std::sin, PlotPlotColor));
         
-        ERROR_HANDLE(BigPlot.  PrintSphere(Window, SysCopro::Sphere(20), Light1));
-        ERROR_HANDLE(SmallPlot.PrintSphere(Window, SysCopro::Sphere(20), Light2));
+        ERROR_HANDLE(BigPlot.  PrintSphere(Window, SysCopro::Sphere(20), Light1, Viewer1));
+        ERROR_HANDLE(SmallPlot.PrintSphere(Window, SysCopro::Sphere(20), Light2, Viewer2));
         ERROR_HANDLE(SysCopro::TransformVector(Light1, SysCopro::Transform::ROTATE_CLKWISE,  SysCopro::Axis::Z));
         ERROR_HANDLE(SysCopro::TransformVector(Light2, SysCopro::Transform::ROTATE_CCLKWISE, SysCopro::Axis::Z));
         

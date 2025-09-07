@@ -50,7 +50,8 @@ public:
 
     Common::Error PrintSphere   (sf::RenderWindow& Window, 
                                  const SysCopro::Sphere& Sphere,
-                                 const SysCopro::Vector3f& LightSource) const;
+                                 const SysCopro::Vector3f& LightSource,
+                                 const SysCopro::Vector3f& Viewer) const;
 
     ~Plot() = default;
 };

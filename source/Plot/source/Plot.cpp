@@ -1,6 +1,6 @@
-#include <SFML/Graphics/Drawable.hpp>
-#include <SFML/Graphics/VertexBuffer.hpp>
 #include <cmath>
+#include <cstddef>
+#include <cassert>
 
 #include <SFML/Config.hpp>
 #include <SFML/Graphics/Vertex.hpp>
@@ -9,8 +9,9 @@
 #include <SFML/Graphics/PrimitiveType.hpp>
 #include <SFML/Graphics/Shape.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/VertexBuffer.hpp>
 #include <SFML/System/Vector2.hpp>
-#include <cstddef>
 
 #include "Common/ErrorHandle.hpp"
 #include "Shapes/Sphere.hpp"
@@ -199,8 +200,8 @@ Common::Error SysCopro::Plot::PrintVector(sf::RenderWindow& Window, const sf::Ve
 
 Common::Error SysCopro::Plot::PrintSphere(sf::RenderWindow& Window, 
                                           const SysCopro::Sphere& Sphere,
-                                          const SysCopro::Vector3f& LightSource) const {
-    constexpr sf::Uint8 BGHandledColorVal  = 16;
+                                          const SysCopro::Vector3f& LightSource,
+                                          const SysCopro::Vector3f& Viewer) const {
     constexpr sf::Uint8 BaseCircleColorVal = 26;
 
     const unsigned int WindowWidth  = this->RightCorner.x - this->LeftCorner.x;
@@ -218,15 +219,24 @@ Common::Error SysCopro::Plot::PrintSphere(sf::RenderWindow& Window,
                 const float z = std::sqrt(Sphere.Radius * Sphere.Radius - CurSeg2.Len2());
                 const SysCopro::Vector3f RadiusVector(CurSeg2.x, CurSeg2.y, z);
 
-                constexpr float DIFF_COEF = 0.8;
-                const float DiffVal = std::max(
+                constexpr float DIFF_COEF       = 0.3;
+                constexpr float GLARE_COEF      = 0.6;
+                constexpr float AMBIENT_COEF    = std::max(0.f, 1 - DIFF_COEF - GLARE_COEF);
+                static_assert(DIFF_COEF + GLARE_COEF + AMBIENT_COEF == 1);
+
+                const SysCopro::Vector3f Point2Light(LightSource - RadiusVector);
+
+                const float DiffVal = std::max(0.f, !RadiusVector ^ !Point2Light);
+
+                const float GlareVal =  std::max(
                     0.f, 
-                    !RadiusVector ^ !SysCopro::Vector3f(LightSource - RadiusVector)
+                      !SysCopro::Vector3f(2.f * !RadiusVector - !Point2Light) 
+                    ^ !SysCopro::Vector3f(Viewer - RadiusVector)
                 );
 
-                constexpr float AMBIENT_COEF = 0.2;
-
-                const float BrightCoef = AMBIENT_COEF + DIFF_COEF * DiffVal;
+                const float BrightCoef = AMBIENT_COEF 
+                                       + DIFF_COEF  * DiffVal 
+                                       + GLARE_COEF * std::pow(GlareVal, 10);
 
                 const sf::Uint8 ColorVal = BaseCircleColorVal 
                                          + (255 - BaseCircleColorVal) * BrightCoef;
