@@ -15,8 +15,8 @@
 
 int main()
 {
-    constexpr unsigned int WINDOW_WIDTH         = 2000;
-    constexpr unsigned int WINDOW_HEIGHT        = 1000;
+    constexpr unsigned int WINDOW_WIDTH         = 2048;
+    constexpr unsigned int WINDOW_HEIGHT        = 1024;
 
     constexpr unsigned int BIG_PLOT_SIZE        = 500;
     constexpr unsigned int SMALL_PLOT_SIZE      = 250;
@@ -36,7 +36,6 @@ int main()
         sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT),
         // sf::VideoMode(),
         "System Coproordinations (SysCopro)"
-        // sf::Style::Default
     );
 
     SysCopro::Plot BigPlot(
@@ -73,8 +72,6 @@ int main()
     //Я ХОЧУ В БАЙКААААААЛ - 
     //Я НЕ ЗНАЮ, Я НЕ ЗНАЮ, Я НЕ ЗНАЮ, ПОЧЕМУ НЕОЧЕВИДНО???
     
-    // constexpr float FPS = 60;
-    // constexpr float SPF = 1 / FPS;
     constexpr float ROTATE_ANGLE_COEF = 0.5;
 
     sf::Clock Clock;

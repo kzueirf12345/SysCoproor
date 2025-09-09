@@ -207,7 +207,7 @@ Common::Error SysCopro::Plot::PrintSphere(sf::RenderWindow& Window,
     const unsigned int WindowWidth  = this->RightCorner.x - this->LeftCorner.x;
     const unsigned int WindowHeight = this->RightCorner.y - this->LeftCorner.y;
 
-    sf::VertexArray Screen(sf::PrimitiveType::Points /*, WindowWidth * WindowHeight*/ );
+    sf::VertexArray Screen(sf::PrimitiveType::Points);
 
     for (unsigned int y = this->LeftCorner.y; y < this->RightCorner.y; ++y) {
         for (unsigned int x = this->LeftCorner.x; x < this->RightCorner.x; ++x) {
