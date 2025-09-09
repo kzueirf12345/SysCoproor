@@ -59,19 +59,25 @@ int main()
         OriginOffset
     );
 
-    sf::Vector2f Vector1(20, 0);
-    sf::Vector2f Vector2(20, 0);
+    SysCopro::Vector2f Vector1(20, 0);
+    SysCopro::Vector2f Vector2(20, 0);
 
     SysCopro::Vector3f Light1(100, 100, 100);
     SysCopro::Vector3f Light2(100, 100, 100);
     SysCopro::Vector3f Viewer1(0, 0, 100);
-    SysCopro::Vector3f Viewer2(0, 0, 100);
-
-
+    SysCopro::Vector3f Viewer2(0, 0, 100); 
+    
+    //ПОПКА (БУМ БУМ БУМ?) - 
+    //roflanEbalo - 
+    //ПЕДИК, ЧТО ЗА ХУЙНЮ ТЫ НАПИСАЛ? - 
+    //Я ХОЧУ В БАЙКААААААЛ - 
+    //Я НЕ ЗНАЮ, Я НЕ ЗНАЮ, Я НЕ ЗНАЮ, ПОЧЕМУ НЕОЧЕВИДНО???
+    
     // constexpr float FPS = 60;
     // constexpr float SPF = 1 / FPS;
+    constexpr float ROTATE_ANGLE_COEF = 0.5;
 
-    // sf::Clock Clock;
+    sf::Clock Clock;
 
     while (Window.isOpen())
     {
@@ -93,19 +99,24 @@ int main()
         
         ERROR_HANDLE(BigPlot.  PrintSphere(Window, SysCopro::Sphere(20), Light1, Viewer1));
         ERROR_HANDLE(SmallPlot.PrintSphere(Window, SysCopro::Sphere(20), Light2, Viewer2));
-        ERROR_HANDLE(SysCopro::TransformVector(Light1, SysCopro::Transform::ROTATE_CLKWISE,  SysCopro::Axis::Z));
-        ERROR_HANDLE(SysCopro::TransformVector(Light2, SysCopro::Transform::ROTATE_CCLKWISE, SysCopro::Axis::Z));
+
+        float RotateAngle = ROTATE_ANGLE_COEF * Clock.getElapsedTime().asSeconds();
+        ERROR_HANDLE(SysCopro::TransformVector(Light1, SysCopro::Transform::ROTATE_CLKWISE,  SysCopro::Axis::Z, RotateAngle));
+        ERROR_HANDLE(SysCopro::TransformVector(Light2, SysCopro::Transform::ROTATE_CCLKWISE, SysCopro::Axis::Z, RotateAngle));
         
-        // ERROR_HANDLE(BigPlot.  PrintVector(Window, Vector1, PlotPlotColor));
-        // ERROR_HANDLE(SmallPlot.PrintVector(Window, Vector2, PlotPlotColor));
-        // ERROR_HANDLE(SysCopro::TransformVector(Vector1, SysCopro::Transform::ROTATE_CLKWISE));
-        // ERROR_HANDLE(SysCopro::TransformVector(Vector2, SysCopro::Transform::ROTATE_CCLKWISE));
+        
+        ERROR_HANDLE(BigPlot.  PrintVector(Window, Vector1, PlotPlotColor));
+        ERROR_HANDLE(SmallPlot.PrintVector(Window, Vector2, PlotPlotColor));
+        
+        RotateAngle = ROTATE_ANGLE_COEF * Clock.getElapsedTime().asSeconds();
+
+        ERROR_HANDLE(SysCopro::TransformVector(Vector1, SysCopro::Transform::ROTATE_CLKWISE,  RotateAngle));
+        ERROR_HANDLE(SysCopro::TransformVector(Vector2, SysCopro::Transform::ROTATE_CCLKWISE, RotateAngle));
 
 
         Window.display();
 
-        // while (Clock.getElapsedTime().asSeconds() < SPF);
-        // Clock.restart();
+        Clock.restart();
     }
 
     return 0;

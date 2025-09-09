@@ -62,7 +62,8 @@ T SysCopro::Vector2<T>::Len() const {
     return std::sqrt(this->Len2());
 }
 
-Common::Error TransformVector(SysCopro::Vector2f& Vector, const SysCopro::Transform Transform);
+Common::Error TransformVector(SysCopro::Vector2f& Vector, const SysCopro::Transform Transform, 
+                              const float AngleRadians = 0.01);
 
 //--------------------------------------------------------------------------------------------------
 
@@ -104,7 +105,7 @@ T SysCopro::Vector3<T>::Len() const {
 }
 
 Common::Error TransformVector(SysCopro::Vector3f& Vector, const SysCopro::Transform Transform, 
-                              SysCopro::Axis Axis);
+                              SysCopro::Axis Axis, const float AngleRadians = 0.01);
 
 }
 

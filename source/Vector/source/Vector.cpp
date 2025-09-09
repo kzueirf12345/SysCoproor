@@ -1,12 +1,12 @@
 #include <Vector/Vector.hpp>
 
-Common::Error SysCopro::TransformVector(SysCopro::Vector2f& Vector, const SysCopro::Transform Transform) {
-    constexpr float DELTA_ANGLE_RADIANS = 0.01;
+Common::Error SysCopro::TransformVector(SysCopro::Vector2f& Vector, const SysCopro::Transform Transform,
+                                        const float AngleRadians) {
     float RotateAngleRadians = NAN;
 
     switch (Transform) {
-        case SysCopro::Transform::ROTATE_CLKWISE:  RotateAngleRadians =  DELTA_ANGLE_RADIANS; break;
-        case SysCopro::Transform::ROTATE_CCLKWISE: RotateAngleRadians = -DELTA_ANGLE_RADIANS; break;
+        case SysCopro::Transform::ROTATE_CLKWISE:  RotateAngleRadians = AngleRadians; break;
+        case SysCopro::Transform::ROTATE_CCLKWISE: RotateAngleRadians = AngleRadians; break;
         case SysCopro::Transform::NONE:            return Common::Error::SUCCESS;
         default:                                   return Common::Error::UNKNOWN_ENUM_ARG;
     }
@@ -23,13 +23,12 @@ Common::Error SysCopro::TransformVector(SysCopro::Vector2f& Vector, const SysCop
 }
 
 Common::Error SysCopro::TransformVector(SysCopro::Vector3f& Vector, const SysCopro::Transform Transform, 
-                                        SysCopro::Axis Axis) {
-    constexpr float DELTA_ANGLE_RADIANS = 0.01f;
+                                        SysCopro::Axis Axis, const float AngleRadians) {
     float RotateAngleRadians = NAN;
 
     switch (Transform) {
-        case SysCopro::Transform::ROTATE_CLKWISE:  RotateAngleRadians =  DELTA_ANGLE_RADIANS; break;
-        case SysCopro::Transform::ROTATE_CCLKWISE: RotateAngleRadians = -DELTA_ANGLE_RADIANS; break;
+        case SysCopro::Transform::ROTATE_CLKWISE:  RotateAngleRadians = AngleRadians; break;
+        case SysCopro::Transform::ROTATE_CCLKWISE: RotateAngleRadians = AngleRadians; break;
         case SysCopro::Transform::NONE:            return Common::Error::SUCCESS;
         default:                                   return Common::Error::UNKNOWN_ENUM_ARG;
     }
