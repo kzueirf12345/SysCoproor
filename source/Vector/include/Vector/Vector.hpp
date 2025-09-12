@@ -25,45 +25,47 @@ enum Transform {
 
 //--------------------------------------------------------------------------------------------------
 
-template <typename T>
-class Vector2: public sf::Vector2<T> {
+template <typename T, template<typename> typename ParentT = sf::Vector2>
+class Vector2: public ParentT<T> {
     private:
     public:
-        Vector2() : sf::Vector2<T>() {}
-        Vector2(T X, T Y) : sf::Vector2<T>(X, Y) {}
+        Vector2() : ParentT<T>() {}
+        Vector2(T X, T Y) : ParentT<T>(X, Y) {}
         template <typename U>
-        explicit Vector2(const sf::Vector2<T>& vector)  : sf::Vector2<T>(vector) {}
-        explicit Vector2(const sf::Vector2<T>&& vector) : sf::Vector2<T>(vector) {}
+        explicit Vector2(const ParentT<T>& vector)  : ParentT<T>(vector) {}
+        explicit Vector2(const ParentT<T>&& vector) : ParentT<T>(vector) {}
 
         [[nodiscard]] T Len2() const;
         [[nodiscard]] T Len()  const;
+        [[nodiscard]] Vector2<T, ParentT> Normal() const;
 };
-
-//template <>
-//class Vector2 <sf::Vector2 <double>> {
-//};
 
 typedef SysCopro::Vector2<float> Vector2f;
 typedef SysCopro::Vector2<int>   Vector2i;
 
-template <typename T>
-T operator ^(const SysCopro::Vector2<T>& left, const SysCopro::Vector2<T>& right) {
+template <typename T, template<typename> typename ParentT = sf::Vector2>
+T operator ^(const SysCopro::Vector2<T, ParentT>& left, const SysCopro::Vector2<T, ParentT>& right) {
     return left.x * right.x + left.y * right.y;
 }
 
-template <typename T>
-SysCopro::Vector2<T> operator !(const SysCopro::Vector2<T>& right) {
-    return SysCopro::Vector2<T>(right / right.Len());
+template <typename T, template<typename> typename ParentT = sf::Vector2>
+SysCopro::Vector2<T, ParentT> operator !(const SysCopro::Vector2<T, ParentT>& right) {
+    return SysCopro::Vector2<T, ParentT>(right / right.Len());
 }
 
-template <typename T>
-T SysCopro::Vector2<T>::Len2() const {
+template <typename T, template<typename> typename ParentT>
+T SysCopro::Vector2<T, ParentT>::Len2() const {
     return (*this) ^ (*this);
 }
 
-template <typename T>
-T SysCopro::Vector2<T>::Len() const {
+template <typename T, template<typename> typename ParentT>
+T SysCopro::Vector2<T, ParentT>::Len() const {
     return std::sqrt(this->Len2());
+}
+
+template <typename T, template<typename> typename ParentT>
+SysCopro::Vector2<T, ParentT> SysCopro::Vector2<T, ParentT>::Normal() const {
+    return Vector2<T, ParentT>(this->y, -this->x);
 }
 
 Common::Error TransformVector(SysCopro::Vector2f& Vector, const SysCopro::Transform Transform, 
@@ -71,15 +73,15 @@ Common::Error TransformVector(SysCopro::Vector2f& Vector, const SysCopro::Transf
 
 //--------------------------------------------------------------------------------------------------
 
-template <typename T>
-class Vector3: public sf::Vector3<T> {
+template <typename T, template<typename> typename ParentT = sf::Vector3>
+class Vector3: public ParentT<T> {
     private:
     public:
-        Vector3() : sf::Vector3<T>() {}
-        Vector3(T X, T Y, T Z) : sf::Vector3<T>(X, Y, Z) {};
+        Vector3() : ParentT<T>() {}
+        Vector3(T X, T Y, T Z) : ParentT<T>(X, Y, Z) {};
         template <typename U>
-        explicit Vector3(const sf::Vector3<T>&  vector) : sf::Vector3<T>(vector) {}
-        explicit Vector3(const sf::Vector3<T>&& vector) : sf::Vector3<T>(vector) {}
+        explicit Vector3(const ParentT<T>&  vector) : ParentT<T>(vector) {}
+        explicit Vector3(const ParentT<T>&& vector) : ParentT<T>(vector) {}
         
         [[nodiscard]] T Len2() const;
         [[nodiscard]] T Len()  const;
@@ -88,23 +90,23 @@ class Vector3: public sf::Vector3<T> {
 typedef SysCopro::Vector3<float> Vector3f;
 typedef SysCopro::Vector3<int>   Vector3i;
 
-template <typename T>
-T operator ^(const SysCopro::Vector3<T>& left, const SysCopro::Vector3<T>& right) {
+template <typename T, template<typename> typename ParentT = sf::Vector2>
+T operator ^(const SysCopro::Vector3<T, ParentT>& left, const SysCopro::Vector3<T, ParentT>& right) {
     return left.x * right.x + left.y * right.y + left.z * right.z;
 }
 
-template <typename T>
-SysCopro::Vector3<T> operator !(const SysCopro::Vector3<T>& right) {
-    return SysCopro::Vector3<T>(right / right.Len());
+template <typename T, template<typename> typename ParentT = sf::Vector2>
+SysCopro::Vector3<T, ParentT> operator !(const SysCopro::Vector3<T, ParentT>& right) {
+    return SysCopro::Vector3<T, ParentT>(right / right.Len());
 }
 
-template <typename T>
-T SysCopro::Vector3<T>::Len2() const {
+template <typename T, template<typename> typename ParentT>
+T SysCopro::Vector3<T, ParentT>::Len2() const {
     return (*this) ^ (*this);
 }
 
-template <typename T>
-T SysCopro::Vector3<T>::Len() const {
+template <typename T, template<typename> typename ParentT>
+T SysCopro::Vector3<T, ParentT>::Len() const {
     return std::sqrt(this->Len2());
 }
 

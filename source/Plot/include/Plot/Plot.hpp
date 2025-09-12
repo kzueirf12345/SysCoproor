@@ -42,6 +42,18 @@ public:
         this->ScaleY = (RightCorner.y - LeftCorner.y) / ScaleY;
     }
 
+    [[nodiscard]]       sf::Vector2f& GetOriginOffset()       noexcept {return this->OriginOffset;}
+    [[nodiscard]] const sf::Vector2f& GetOriginOffset() const noexcept {return this->OriginOffset;}
+    [[nodiscard]]       unsigned int& GetScaleX()             noexcept {return this->ScaleX;}
+    [[nodiscard]] const unsigned int& GetScaleX()       const noexcept {return this->ScaleX;}
+    [[nodiscard]]       unsigned int& GetScaleY()             noexcept {return this->ScaleY;}
+    [[nodiscard]] const unsigned int& GetScaleY()       const noexcept {return this->ScaleY;}
+
+    Common::Error MoveLeft      () noexcept;
+    Common::Error MoveRight     () noexcept;
+    Common::Error MoveUp        () noexcept;
+    Common::Error MoveDown      () noexcept;
+
     Common::Error PrintSysCopro (sf::RenderWindow& Window) const;
     Common::Error PrintPlot     (sf::RenderWindow& Window, float (* const Func)(const float X), 
                                  sf::Color Color) const;

@@ -1,5 +1,7 @@
 #include <SFML/Config.hpp>
 #include <SFML/System/Clock.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
 #include <cmath>
 
 #include <SFML/Graphics.hpp>
@@ -84,8 +86,23 @@ int main()
         sf::Event Event;
         while (Window.pollEvent(Event))
         {
-            if (Event.type == sf::Event::Closed)
+            if (Event.type == sf::Event::Closed) {
                 Window.close();
+            }
+            if (Event.type == sf::Event::KeyPressed) {
+                if (Event.key.code == sf::Keyboard::Left) {
+                    BigPlot.MoveLeft();
+                }
+                if (Event.key.code == sf::Keyboard::Right) {
+                    BigPlot.MoveRight();
+                }
+                if (Event.key.code == sf::Keyboard::Up) {
+                    BigPlot.MoveUp();
+                }
+                if (Event.key.code == sf::Keyboard::Down) {
+                    BigPlot.MoveDown();
+                }
+            }
         }
 
         Window.clear();
