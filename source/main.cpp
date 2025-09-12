@@ -21,7 +21,7 @@ int main()
     constexpr unsigned int BIG_PLOT_SIZE        = 500;
     constexpr unsigned int SMALL_PLOT_SIZE      = 250;
 
-    constexpr unsigned int BIG_PLOT_MARGIN      = (WINDOW_HEIGHT - BIG_PLOT_SIZE) / 2;
+    constexpr unsigned int BIG_PLOT_MARGIN      = (WINDOW_HEIGHT -   BIG_PLOT_SIZE) / 2;
     constexpr unsigned int SMALL_PLOT_MARGIN    = (WINDOW_HEIGHT - SMALL_PLOT_SIZE) / 2;
 
     const sf::Color PlotBGColor  (249, 248, 247);
@@ -58,13 +58,14 @@ int main()
         OriginOffset
     );
 
-    SysCopro::Vector2f Vector1(20, 0);
-    SysCopro::Vector2f Vector2(20, 0);
-
-    SysCopro::Vector3f Light1(100, 100, 100);
-    SysCopro::Vector3f Light2(100, 100, 100);
+    
+    SysCopro::Vector3f Light1(10 * 20, 10 * 20, 10 * 20);
+    SysCopro::Vector3f Light2(10 * 20, 10 * 20, 10 * 20);
     SysCopro::Vector3f Viewer1(0, 0, 100);
     SysCopro::Vector3f Viewer2(0, 0, 100); 
+
+    SysCopro::Vector2f Vector1(20, 0);
+    SysCopro::Vector2f Vector2(20, 0);
     
     //ПОПКА (БУМ БУМ БУМ?) - 
     //roflanEbalo - 
@@ -75,6 +76,8 @@ int main()
     constexpr float ROTATE_ANGLE_COEF = 0.5;
 
     sf::Clock Clock;
+
+    Window.setFramerateLimit(20);
 
     while (Window.isOpen())
     {
@@ -102,13 +105,13 @@ int main()
         ERROR_HANDLE(SysCopro::TransformVector(Light2, SysCopro::Transform::ROTATE_CCLKWISE, SysCopro::Axis::Z, RotateAngle));
         
         
-        ERROR_HANDLE(BigPlot.  PrintVector(Window, Vector1, PlotPlotColor));
-        ERROR_HANDLE(SmallPlot.PrintVector(Window, Vector2, PlotPlotColor));
+        ERROR_HANDLE(BigPlot.  PrintVector(Window, SysCopro::Vector2f(Light1.x, Light1.y), PlotPlotColor));
+        ERROR_HANDLE(SmallPlot.PrintVector(Window, SysCopro::Vector2f(Light1.x, Light1.y), PlotPlotColor));
         
-        RotateAngle = ROTATE_ANGLE_COEF * Clock.getElapsedTime().asSeconds();
+        // RotateAngle = ROTATE_ANGLE_COEF * Clock.getElapsedTime().asSeconds();
 
-        ERROR_HANDLE(SysCopro::TransformVector(Vector1, SysCopro::Transform::ROTATE_CLKWISE,  RotateAngle));
-        ERROR_HANDLE(SysCopro::TransformVector(Vector2, SysCopro::Transform::ROTATE_CCLKWISE, RotateAngle));
+        // ERROR_HANDLE(SysCopro::TransformVector(Vector1, SysCopro::Transform::ROTATE_CLKWISE,  RotateAngle));
+        // ERROR_HANDLE(SysCopro::TransformVector(Vector2, SysCopro::Transform::ROTATE_CCLKWISE, RotateAngle));
 
 
         Window.display();

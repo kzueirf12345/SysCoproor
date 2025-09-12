@@ -168,26 +168,13 @@ Common::Error SysCopro::Plot::PrintVector(sf::RenderWindow& Window, const sf::Ve
     Line[1].position = Seg2Pix(Vector);
     Tip[1].position  = Line[1].position;
 
-    constexpr float TIP_ANGLE_DEGREES = 20;
-    constexpr float TIP_ANGLE_RADIANS = TIP_ANGLE_DEGREES * M_PI / 180.0;
-    constexpr float TIP_SCALE         = 0.3;
+    constexpr float TIP_SCALE = 0.1;
 
     const sf::Vector2f ScaledTendril = -Vector * TIP_SCALE;
+    const sf::Vector2f NormalTendril(ScaledTendril.y, -ScaledTendril.x);
 
-
-    Tip[0].position.x = Vector.x 
-                      + ScaledTendril.x * std::cos( TIP_ANGLE_RADIANS) 
-                      - ScaledTendril.y * std::sin( TIP_ANGLE_RADIANS);
-    Tip[0].position.y = Vector.y 
-                      + ScaledTendril.x * std::sin( TIP_ANGLE_RADIANS) 
-                      + ScaledTendril.y * std::cos( TIP_ANGLE_RADIANS);
-    
-    Tip[2].position.x = Vector.x 
-                      + ScaledTendril.x * std::cos( TIP_ANGLE_RADIANS) 
-                      - ScaledTendril.y * std::sin(-TIP_ANGLE_RADIANS);
-    Tip[2].position.y = Vector.y 
-                      + ScaledTendril.x * std::sin(-TIP_ANGLE_RADIANS) 
-                      + ScaledTendril.y * std::cos( TIP_ANGLE_RADIANS);
+    Tip[0].position = Vector + 2.f * ScaledTendril + NormalTendril;
+    Tip[2].position = Vector + 2.f * ScaledTendril - NormalTendril;
 
     Tip[0].position = Seg2Pix(Tip[0].position);
     Tip[2].position = Seg2Pix(Tip[2].position);
@@ -219,10 +206,10 @@ Common::Error SysCopro::Plot::PrintSphere(sf::RenderWindow& Window,
                 const float z = std::sqrt(Sphere.Radius * Sphere.Radius - CurSeg2.Len2());
                 const SysCopro::Vector3f RadiusVector(CurSeg2.x, CurSeg2.y, z);
 
-                constexpr float DIFF_COEF       = 0.3;
-                constexpr float GLARE_COEF      = 0.6;
-                constexpr float AMBIENT_COEF    = std::max(0.f, 1 - DIFF_COEF - GLARE_COEF);
-                static_assert(DIFF_COEF + GLARE_COEF + AMBIENT_COEF == 1);
+                const SysCopro::Vector3f AMBIENT_COEF   (0.15, 0.00, 0.00);
+                const SysCopro::Vector3f DIFF_COEF      (0.85, 0.10, 0.10); 
+                const SysCopro::Vector3f GLARE_COEF     (1.00, 1.00, 1.00); 
+                constexpr int            GLARE_COS_POW  = 20;
 
                 const SysCopro::Vector3f Point2Light(LightSource - RadiusVector);
 
@@ -234,16 +221,21 @@ Common::Error SysCopro::Plot::PrintSphere(sf::RenderWindow& Window,
                     ^ !SysCopro::Vector3f(Viewer - RadiusVector)
                 );
 
-                const float BrightCoef = AMBIENT_COEF 
-                                       + DIFF_COEF  * DiffVal 
-                                       + GLARE_COEF * std::pow(GlareVal, 10);
+                SysCopro::Vector3f BrightCoefs (
+                    AMBIENT_COEF 
+                  + DIFF_COEF  * DiffVal
+                  + GLARE_COEF * (float)std::pow(GlareVal, GLARE_COS_POW)
+                );
 
-                const sf::Uint8 ColorVal = BaseCircleColorVal 
-                                         + (255 - BaseCircleColorVal) * BrightCoef;
+                const sf::Color Color (
+                    BaseCircleColorVal + (255 - BaseCircleColorVal) * std::min(1.f, BrightCoefs.x),
+                    BaseCircleColorVal + (255 - BaseCircleColorVal) * std::min(1.f, BrightCoefs.y),
+                    BaseCircleColorVal + (255 - BaseCircleColorVal) * std::min(1.f, BrightCoefs.z)
+                );
 
                 Screen.append(sf::Vertex(
                     sf::Vector2f(x, y),
-                    sf::Color(ColorVal, ColorVal, ColorVal)
+                    Color
                 ));
             }
         }

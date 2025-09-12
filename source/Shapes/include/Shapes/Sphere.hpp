@@ -7,19 +7,22 @@
 #include <SFML/System/Vector3.hpp>
 
 #include "Vector/Vector.hpp"
-#include "Shapes/Circle.hpp"
+// #include "Shapes/Circle.hpp"
 
 namespace SysCopro
 {
 
 class Sphere {
 private:
+    sf::Color Color;
 public:
     float Radius;
     
-    explicit Sphere(const float Radius)              : Radius{Radius} {}
-    explicit Sphere(const SysCopro::Circle&  Circle) : Radius{Circle.Radius} {}
-    explicit Sphere(const SysCopro::Circle&& Circle) : Radius{Circle.Radius} {}
+    explicit Sphere(const float Radius, sf::Color Color = {0, 0, 0, 255}) 
+        : Radius{Radius}, Color(Color) 
+    {}
+    // explicit Sphere(const SysCopro::Sphere&  Sphere) : Radius{Sphere.Radius}, Color{Sphere.Color} {}
+    // explicit Sphere(const SysCopro::Sphere&& Sphere) : Radius{Sphere.Radius}, Color{Sphere.Color} {}
 
     [[nodiscard]] bool IsInside(const SysCopro::Vector3f Dot) const;
 

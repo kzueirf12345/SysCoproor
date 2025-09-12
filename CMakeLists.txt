@@ -4,6 +4,8 @@ project(SysCoproor LANGUAGES CXX)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # to generate compile_commands.json
 
+set(CMAKE_BUILD_PARALLEL_LEVEL 1)
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 

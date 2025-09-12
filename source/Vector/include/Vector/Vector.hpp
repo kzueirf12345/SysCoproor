@@ -39,6 +39,10 @@ class Vector2: public sf::Vector2<T> {
         [[nodiscard]] T Len()  const;
 };
 
+//template <>
+//class Vector2 <sf::Vector2 <double>> {
+//};
+
 typedef SysCopro::Vector2<float> Vector2f;
 typedef SysCopro::Vector2<int>   Vector2i;
 
